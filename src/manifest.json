@@ -1,0 +1,24 @@
+{
+  "name": "True Corner",
+  "version": "0.0.0",
+  "manifest_version": 2,
+  "description": "Check out how your soccer team is doing, anywhere, anytime",
+  "author": "David Gamboa",
+  "homepage_url": "https://github.com/HasselGR/what-2-watch",
+  "icons": {
+    "128": "images/icon.png"
+  },
+  "browser_action": {
+    "default_icon": "images/icon.png",
+    "default_popup": "popup.html"
+  },
+  "options_ui": {
+    "chrome_style": true,
+    "page": "options.html"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
