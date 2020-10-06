@@ -12,79 +12,51 @@ const peru = document.getElementById('PE')
 const colombia = document.getElementById('CO')
 
 
-browser.runtime.onMessage.addListener((request, sender) => {
-  switch (request.message){
-    case 'leagueTable':
-      const standings = request.params.ranks.flat()
-      console.log(standings)
-      standings.forEach(element => {
-        const team = {
-          ranking: element.rank,
-          team:  element.teamName,
-          matches: element.all.matchsPlayed,
-          wins: element.all.win,
-          loses: element.all.lose,
-          draws: element.all.draw,
-          points: element.points,
-          goalsDiff: element.goalsDiff,
-        }
-        console.log(team)
-      })
-  }
-})
 
+function openRanks(league) {
+  browser.tabs.create({
+    index: 0,
+    url: browser.runtime.getURL('src/ranks.html'),
+    active: true,
+  })
+  browser.runtime.sendMessage({
+    message: league,
+  })
+}
 
 
 uKingdom.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Premier League',
-  })
+  openRanks('Premier League')
 })
 
 spain.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'La Liga',
-  })
+  openRanks('La Liga')
 })
 
 france.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Ligue 1',
-  })
+  openRanks('Ligue 1')
 })
 
 italy.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Serie A',
-  })
+  openRanks('Serie A')
 })
 
 brazil.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Copa Do Brazil',
-  })
+  openRanks('Copa Do Brazil')
 })
 
 argentina.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Primera Division Argentina',
-  })
+  openRanks('Primera Division Argentina')
 })
 
 mexico.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Liga Mx',
-  })
+  openRanks('Liga MX')
 })
 
 peru.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Primera Division Peruana',
-  })
+  openRanks('Primera Division Peruana')
 })
 
 colombia.addEventListener('click', function () {
-  browser.runtime.sendMessage({
-    message: 'Primera A',
-  })
+  openRanks('Primera A')
 })
