@@ -14,49 +14,42 @@ myHeaders.append('X-RapidAPI-Key', 'c327b55042017e95c88560420ee64e35')
  1326: primera a (colombia)
 */
 const anotherLeagues = ['2664', '2857', '1333', '780', '2656', '1341', '1326']
-const anotherNames = ['Ligue 1', 'Serie A', 'Copa Do Brazil', 'Primera Division Argentina', 'Liga MX', 'Primera Division Peruana', 'Primera A']
+const anotherNames = ['Ligue_1', 'Serie_A', 'Copa_Do_Brazil', 'Primera_Division_Argentina', 'Liga_MX', 'Primera_Division_Peruana', 'Primera_A']
 
 const leagues = ['2790', '2833']
-const names = ['Premier League', 'La Liga']
+const names = ['Premier_League', 'La_Liga']
 
 browser.runtime.onInstalled.addListener(function () {
   leagues.forEach((element, index) => {
     getStandings(element, names[index])
   })
 })
-// browser.runtime.onMessage.addListener((request, sender) => {
-//   switch (request.message) {
-//     case 'Premier League':
-//       getStandings('https://v2.api-football.com/leagueTable/2790')
-//       break
-//     case 'La Liga':
-//       getStandings('https://v2.api-football.com/leagueTable/2833')
-//       break
-//     case 'Ligue 1':
-//       getStandings('https://v2.api-football.com/leagueTable/2664')
-//       break
-//     case 'Serie A':
-//       getStandings('https://v2.api-football.com/leagueTable/2857')
-//       break
-//     case 'Copa Do Brazil':
-//       getStandings('https://v2.api-football.com/leagueTable/1333')
-//       break
-//     case 'Primera Division Argentina':
-//       getStandings('https://v2.api-football.com/leagueTable/780')
-//       break
-//     case 'Liga MX':
-//       getStandings('https://v2.api-football.com/leagueTable/2656')
-//       break
-//     case 'Primera Division Peruana':
-//       getStandings('https://v2.api-football.com/leagueTable/1341')
-//       break
-//     case 'Primera A':
-//       getStandings('https://v2.api-football.com/leagueTable/1326')
-//       break
-//     default:
-//       console.log(request, 'request not handled')
-//   }
-// })
+
+const sendRankings = (league) => {
+  const page = browser.tabs.create({
+    index: 0,
+    url: browser.runtime.getURL('ranks.html'),
+    active: true,
+  })
+  page.then(() => {
+    browser.runtime.sendMessage({
+      message: 'createTable',
+      params: {
+        league: league,
+      },
+    })
+  })
+}
+
+browser.runtime.onMessage.addListener((request, sender) => {
+  switch (request.message) {
+    case 'element':
+      sendRankings(request.params.league)
+      break
+    default:
+      console.log(request, 'request not handled')
+  }
+})
 
 
 function getStandings(league, name) {
@@ -74,7 +67,7 @@ function getStandings(league, name) {
           team:  element.teamName,
           matches: element.all.matchsPlayed,
           wins: element.all.win,
-          loses: element.all.lose,
+          losses: element.all.lose,
           draws: element.all.draw,
           points: element.points,
           goalsDiff: element.goalsDiff,

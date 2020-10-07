@@ -10,6 +10,7 @@ export const paths = {
     'src/content.js',
     'src/background.js',
     'src/popup.js',
+    'src/ranks.js'
   ],
 
   styles: [
@@ -24,6 +25,7 @@ export const paths = {
   markup: [
     'src/options.html',
     'src/popup.html',
+    'src/ranks.html'
   ],
 }
 
