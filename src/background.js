@@ -25,19 +25,12 @@ browser.runtime.onInstalled.addListener(function () {
   })
 })
 
-const sendRankings = (league) => {
-  const page = browser.tabs.create({
+const sendRankings = async (league) => {
+  await browser.storage.local.set({ ['liga']: league })
+  browser.tabs.create({
     index: 0,
-    url: browser.runtime.getURL('ranks.html'),
+    url: '/ranks.html',
     active: true,
-  })
-  page.then(() => {
-    browser.runtime.sendMessage({
-      message: 'createTable',
-      params: {
-        league: league,
-      },
-    })
   })
 }
 
