@@ -16,6 +16,7 @@ export const paths = {
   styles: [
     'src/options.scss',
     'src/popup.scss',
+    'src/ranks.css'
   ],
 
   images: 'src/images/**/*',

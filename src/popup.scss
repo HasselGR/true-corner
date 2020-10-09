@@ -1,0 +1,32 @@
+body{
+  height: 400px;
+  width: 400px
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 35px;
+  grid-gap: 2rem;
+  
+  justify-items: center;
+  align-items: center;
+  margin-left: 5%;
+}
+.grid-item{
+  width: 75px;
+  height: 75px;
+}
+
+button {
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
