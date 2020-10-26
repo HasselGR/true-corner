@@ -1,0 +1,35 @@
+{
+  "appName": {
+    "message": "True Corner"
+  },
+  "appDesc": {
+    "message": "Chequea como va tu equipo, cuando sea, donde sea."
+  },
+  "popupMessage": {
+    "message": "Observa como van las tablas de las ligas más famosas"
+  }, 
+  "ranking":{
+    "message": "Lugar"
+  },
+  "team":{
+    "message": "Equipo"
+  },
+  "matches": {
+    "message": "Partidos"
+  },
+  "wins": {
+    "message": "Ganados"
+  },
+  "losses": {
+    "message": "Perdidos"
+  },
+  "draws": {
+    "message": "Empates"
+  },
+  "points":{
+    "message": "Puntos"
+  },
+  "goalsDiff": {
+    "message": "Diff.Goles"
+  }
+}

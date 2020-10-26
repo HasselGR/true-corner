@@ -1,7 +1,6 @@
 import browser from 'webextension-polyfill'
 
 
-let uList = document.getElementById('standings')
 let rankings = document.getElementById('table')
 
 
@@ -16,6 +15,14 @@ const addStat = ( row, name) => {
 
 const arrayStats = ['ranking', 'team', 'matches', 'wins', 'losses', 'draws', 'points', 'goalsDiff']
  
+const addTag = () => {
+  arrayStats.forEach(stat => {
+    let parent = document.getElementById(stat)
+    let tag = document.createElement('h5')
+    tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
+    parent.appendChild(tag)
+  })
+}
 
 const addLeague = (league) =>{
   let header = document.getElementById('league')
@@ -24,6 +31,7 @@ const addLeague = (league) =>{
   title.appendChild(document.createTextNode(league))
 }
 const init = async () => {
+  
   const league = (await browser.storage.local.get('liga'))['liga']
   console.log('League: ', league)
   addLeague(league)
@@ -41,5 +49,7 @@ const init = async () => {
   }).catch(error => console.error(error))
 }
 
+
+addTag()
 init()
 console.log('Works!')

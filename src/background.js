@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 
-var myHeaders = new Headers()
+let myHeaders = new Headers()
 myHeaders.append('X-RapidAPI-Key', 'c327b55042017e95c88560420ee64e35')
 /*
  2790: premier league
@@ -19,33 +19,7 @@ const anotherNames = ['Ligue_1', 'Serie_A', 'Copa_Do_Brazil', 'Primera_Division_
 const leagues = ['2790', '2833']
 const names = ['Premier_League', 'La_Liga']
 
-browser.runtime.onInstalled.addListener(function () {
-  leagues.forEach((element, index) => {
-    getStandings(element, names[index])
-  })
-})
-
-const sendRankings = async (league) => {
-  await browser.storage.local.set({ ['liga']: league })
-  browser.tabs.create({
-    index: 0,
-    url: '/ranks.html',
-    active: true,
-  })
-}
-
-browser.runtime.onMessage.addListener((request, sender) => {
-  switch (request.message) {
-    case 'element':
-      sendRankings(request.params.league)
-      break
-    default:
-      console.log(request, 'request not handled')
-  }
-})
-
-
-function getStandings(league, name) {
+const getStandings = (league, name) => {
   fetch(`https://v2.api-football.com/leagueTable/${league}`, {
     method: 'GET',
     headers: myHeaders,
@@ -69,6 +43,47 @@ function getStandings(league, name) {
         ranks.push(team)
         browser.storage.local.set({ [ name ]: ranks })
       })
+      const date = new Date()
+      browser.storage.local.set({ date: date.toString() })
     })
     .catch(error => console.log(error))
 }
+
+browser.runtime.onInstalled.addListener(() => {
+  leagues.forEach((element, index) => {
+    getStandings(element, names[index])
+  })
+})
+
+const updater = browser.alarms.create('Daily Updater', {
+  delayInMinutes: 1440,
+  periodInMinutes: 1440,
+})
+
+
+browser.alarms.onAlarm.addListener(() => {
+  leagues.forEach((element, index) => {
+    getStandings(element, names[index])
+  })
+})
+
+const sendRankings = async (league) => {
+  await browser.storage.local.set({ 'liga': league })
+  browser.tabs.create({
+    index: 0,
+    url: '/ranks.html',
+    active: true,
+  })
+}
+
+browser.runtime.onMessage.addListener((request) => {
+  switch (request.message) {
+    case 'element':
+      sendRankings(request.params.league)
+      break
+    default:
+      console.log(request, 'request not handled')
+  }
+})
+
+

@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 
+let footer = document.getElementById('footer')
 
 const arrayLeague = [
   {
@@ -55,3 +56,22 @@ arrayLeague.forEach(element => {
     openRanks(element.league)
   })
 })
+
+
+const addDate = () => {
+  let info = document.getElementById('info')
+  let description = document.createElement('h3')
+  description.appendChild(document.createTextNode(browser.i18n.getMessage('popupMessage')))
+  info.appendChild(description)
+  
+  browser.storage.local.get('date')
+    .then(data => {
+      let tag = document.createElement('h4')
+      tag.appendChild(document.createTextNode(`Last updated since: ${data.date}`))
+      footer.append(tag)
+    })
+}
+
+
+
+addDate()
