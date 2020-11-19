@@ -2,6 +2,14 @@ import browser from 'webextension-polyfill'
 
 let myHeaders = new Headers()
 myHeaders.append('X-RapidAPI-Key', 'c327b55042017e95c88560420ee64e35')
+
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow',
+}
+
 /*
  2790: premier league
  2833: la liga
@@ -15,43 +23,95 @@ myHeaders.append('X-RapidAPI-Key', 'c327b55042017e95c88560420ee64e35')
 */
 const anotherLeagues = ['2664', '2857', '1333', '780', '2656', '1341', '1326']
 const anotherNames = ['Ligue_1', 'Serie_A', 'Copa_Do_Brazil', 'Primera_Division_Argentina', 'Liga_MX', 'Primera_Division_Peruana', 'Primera_A']
+const anotherMatches = ['Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches', 'Primera_A_matches']
 
 const leagues = ['2790', '2833']
 const names = ['Premier_League', 'La_Liga']
+const matches = ['Premier_League_matches', 'La_Liga_matches']
 
-const getStandings = (league, name) => {
-  fetch(`https://v2.api-football.com/leagueTable/${league}`, {
-    method: 'GET',
-    headers: myHeaders,
-  }).then(response => response.json())
+let ranks = {}
+let current = ''
+
+const getStandings = (league, name, matches) => {
+  fetch(`https://v2.api-football.com/leagueTable/${league}`, requestOptions)
+    .then(response => response.json())
     .then(data => {
       const tables = data.api.standings.flat()
-      let ranks = []
-      console.log('tables', tables)
+      let teams = []
+      // console.log('tables', tables)
       tables.forEach(element => {
         const team = {
           ranking: element.rank,
           team:  element.teamName,
-          matches: element.all.matchsPlayed,
+          games: element.all.matchsPlayed,
           wins: element.all.win,
           losses: element.all.lose,
           draws: element.all.draw,
           points: element.points,
           goalsDiff: element.goalsDiff,
         }
-        console.log(team)
-        ranks.push(team)
-        browser.storage.local.set({ [ name ]: ranks })
+        teams.push(team)
       })
-      const date = new Date()
-      browser.storage.local.set({ date: date.toString() })
+      console.log('teams before insertion', teams)
+      browser.storage.local.set({ [ name ]: teams })
     })
     .catch(error => console.log(error))
+
+  // FOR FETCHING THE CURRENT ROUND, FIX.
+  // fetch(`https://v2.api-football.com/fixtures/rounds/${league}/current`, {
+  //   method: 'GET',
+  //   headers: myHeaders,
+  // }).then(response => response.json())
+  //   .then(data => {
+  //     current = `${data.api.fixtures[0]}/`
+  //     console.log('current', current)
+  //     console.log(`fixture fetch: https://v2.api-football.com/fixtures/league/${league}/${current}`)
+  //   })
+  //   .catch(error => console.log(error))
+
+
+  fetch(`https://v2.api-football.com/fixtures/league/2790/Regular_Season_-_9/`, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      // console.log('games', data)
+      const fixtures = data.api.fixtures
+      let games = []
+      fixtures.forEach(element => {
+        const match = {
+          awayTeamName: element.awayTeam.team_name,
+          awayTeamLogo: element.awayTeam.logo,
+          date: element.event_date,
+          firstStart: element.firstHalfStart,
+          goalsAway: element.goalsAwayTeam,
+          goalsHome: element.goalsHomeTeam,
+          homeTeamName: element.homeTeam.team_name,
+          homeTeamLogo: element.homeTeam.logo,
+          scoreHalfTime: element.score.halftime,
+          scoreFullTime: element.score.fulltime,
+          scoreExtraTime: element.score.extratime,
+          scorePenalty: element.score.penalty,
+          status: element.status,
+          venue: element.venue,
+        }
+        games.push(match)
+      })
+      console.log('games before insertion', games)
+      browser.storage.local.set({ [ matches ]: games })
+    })
+    .catch(error => console.log(error))
+
 }
 
 browser.runtime.onInstalled.addListener(() => {
   leagues.forEach((element, index) => {
-    getStandings(element, names[index])
+    getStandings(element, names[index], matches[index])
+  })
+  const date = new Date()
+  browser.storage.local.set({ date: date.toString() })
+
+  let test = browser.storage.local.get()
+  test.then( data => {
+    console.log('data of storage', data)
   })
 })
 
@@ -65,12 +125,13 @@ browser.alarms.onAlarm.addListener(() => {
   leagues.forEach((element, index) => {
     getStandings(element, names[index])
   })
+  
 })
 
-const sendRankings = async (league) => {
-  await browser.storage.local.set({ 'liga': league })
+const sendRankings = async (league, dates) => {
+  await browser.storage.local.set({ 'liga': league, 'partidos': dates })
   browser.tabs.create({
-    index: 0,
+    index: 1000, // Its a very high number so it always opens on the last tab.
     url: '/ranks.html',
     active: true,
   })
@@ -79,7 +140,7 @@ const sendRankings = async (league) => {
 browser.runtime.onMessage.addListener((request) => {
   switch (request.message) {
     case 'element':
-      sendRankings(request.params.league)
+      sendRankings(request.params.league, request.params.matches)
       break
     default:
       console.log(request, 'request not handled')
