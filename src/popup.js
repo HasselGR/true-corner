@@ -1,16 +1,15 @@
 import browser from 'webextension-polyfill'
 
 let footer = document.getElementById('footer')
-
 const arrayLeague = [
   {
     country: 'UK',
-    league: 'Premier_League',
+    league: 'Premier League',
     matches:'Premier_League_matches',
   },
   {
     country: 'ES',
-    league: 'La_Liga',
+    league: 'La Liga',
     matches:'La_Liga_matches',
   },
   {

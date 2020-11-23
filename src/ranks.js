@@ -3,19 +3,22 @@ import browser from 'webextension-polyfill'
 
 let rankings = document.getElementById('table')
 let round = document.getElementById('matches')
-
-const addStat = ( row, name) => {
+let back = document.getElementById('back')
+const centeredRight = 'col-sm border-right justify-content d-flex align-items-center flex-column'
+const centeredLeft = 'col-sm border-left justify-content d-flex align-items-center flex-column'
+const centered = 'col-sm  justify-content d-flex align-items-center flex-column'
+const addStat = (row, name, style, type = 'h6') => {
   let column = document.createElement('div')
-  column.setAttribute('class', 'col-sm border-right')
-  let stat = document.createElement('h6')
+  column.setAttribute('class', style)
+  let stat = document.createElement(type)
   stat.appendChild(document.createTextNode(name))
   column.append(stat)
   row.appendChild(column)
 }
 
-const addImg = (row, name) => {
+const addImg = (row, name, style) => {
   let column = document.createElement('div')
-  column.setAttribute('class', 'col-sm border-right')
+  column.setAttribute('class', style)
   let stat = document.createElement('img')
   stat.setAttribute('width', '150')
   stat.setAttribute('height', '150')
@@ -27,7 +30,7 @@ const addImg = (row, name) => {
 
 
 const arrayStats = ['ranking', 'team', 'games', 'wins', 'losses', 'draws', 'points', 'goalsDiff']
-const arrayMatches = ['homeTeam', 'score', 'awayTeam'] 
+const arrayMatches = ['homeTeam', 'score', 'awayTeam']
 const arrayTags = ['Home Team', 'Status', 'Away Team']
 const arrayMatchesStats = ['homeTeamLogo', 'scoreFullTime', 'awayTeamLogo']
 
@@ -45,27 +48,26 @@ const addTag = () => {
     tag.appendChild(document.createTextNode(arrayTags[index]))
     parent.appendChild(tag)
   })
-
 }
 
-const addLeague = (league) =>{
+const addLeague = (league) => {
   let header = document.getElementById('league')
   let title = document.getElementById('title')
   header.appendChild(document.createTextNode(`League: ${league}`))
   title.appendChild(document.createTextNode(league))
 }
 const init = async () => {
-  
   const league = (await browser.storage.local.get('liga'))['liga']
   console.log('League: ', league)
   addLeague(league)
   const table = browser.storage.local.get(league)
   table.then(data => {
+    console.log('league data', data)
     data[league].forEach(team => {
       let row = document.createElement('div')
       row.setAttribute('class', 'row')
       arrayStats.forEach(element => {
-        addStat(row, team[element])
+        addStat(row, team[element], 'col-sm border-right')
       })
       rankings.append(row)
     })
@@ -80,26 +82,32 @@ const init = async () => {
     data[matches].forEach(match => {
       let row = document.createElement('div')
       row.setAttribute('class', 'row')
-      addImg(row, match.homeTeamLogo)
-      addStat(row, match.scoreFullTime)
-      addImg(row, match.awayTeamLogo)
+      addImg(row, match.homeTeamLogo, `${centeredRight} mt-3`)
+      addStat(row, match.scoreFullTime, `${centered} text-center mt-5 `, 'h1',)
+      addImg(row, match.awayTeamLogo, `${centeredLeft} mt-3`)
       round.append(row)
       let row2 = document.createElement('div')
       row2.setAttribute('class', 'row')
-      addStat(row2, match.homeTeamName)
-      addStat(row2, match.status)
-      addStat(row2, match.awayTeamName)
+      addStat(row2, match.homeTeamName, centeredRight, 'h4')
+      addStat(row2, match.status, centered, 'h4')
+      addStat(row2, match.awayTeamName, centeredLeft, 'h4')
       round.append(row2)
       let row3 = document.createElement('div')
       row3.setAttribute('class', 'row')
-      addStat(row3, '')
-      addStat(row3, match.date)
-      addStat(row3, '')
+      addStat(row3, '', 'col-sm border-right')
+      addStat(row3, match.date.substr(0, 9), centered)
+      addStat(row3, '', 'col-sm border-left')
       round.append(row3)
     })
   })
-  
 }
+
+back.addEventListener('click', () => {
+  browser.browserAction.setPopup({
+    popup: 'popup.html',
+  })
+  browser.browserAction.openPopup()
+})
 
 // awayTeamName: element.awayTeam.team_name,
 //           awayTeamLogo: element.awayTeam.logo,

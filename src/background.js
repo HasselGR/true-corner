@@ -26,7 +26,7 @@ const anotherNames = ['Ligue_1', 'Serie_A', 'Copa_Do_Brazil', 'Primera_Division_
 const anotherMatches = ['Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches', 'Primera_A_matches']
 
 const leagues = ['2790', '2833']
-const names = ['Premier_League', 'La_Liga']
+const names = ['Premier League', 'La Liga']
 const matches = ['Premier_League_matches', 'La_Liga_matches']
 
 let ranks = {}
@@ -70,7 +70,7 @@ const getStandings = (league, name, matches) => {
   //   .catch(error => console.log(error))
 
 
-  fetch(`https://v2.api-football.com/fixtures/league/2790/Regular_Season_-_9/`, requestOptions)
+  fetch(`https://v2.api-football.com/fixtures/league/2790/Regular_Season_-_7/`, requestOptions)
     .then(response => response.json())
     .then(data => {
       // console.log('games', data)
@@ -103,6 +103,9 @@ const getStandings = (league, name, matches) => {
 }
 
 browser.runtime.onInstalled.addListener(() => {
+  browser.browserAction.setPopup({
+    popup: 'popup.html',
+  })
   leagues.forEach((element, index) => {
     getStandings(element, names[index], matches[index])
   })
@@ -130,10 +133,8 @@ browser.alarms.onAlarm.addListener(() => {
 
 const sendRankings = async (league, dates) => {
   await browser.storage.local.set({ 'liga': league, 'partidos': dates })
-  browser.tabs.create({
-    index: 1000, // Its a very high number so it always opens on the last tab.
-    url: '/ranks.html',
-    active: true,
+  browser.browserAction.setPopup({
+    popup: 'ranks.html',
   })
 }
 
