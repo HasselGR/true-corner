@@ -103,10 +103,11 @@ const init = async () => {
 }
 
 back.addEventListener('click', () => {
-  browser.browserAction.setPopup({
-    popup: 'popup.html',
-  })
-  browser.browserAction.openPopup()
+  // browser.browserAction.setPopup({
+  //   popup: 'popup.html',
+  // })
+  window.location.href = 'popup.html'
+  // browser.browserAction.openPopup()
 })
 
 // awayTeamName: element.awayTeam.team_name,

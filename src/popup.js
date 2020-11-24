@@ -49,14 +49,15 @@ const arrayLeague = [
   },
 ]
 
-function openRanks(league, matches) {
-  browser.runtime.sendMessage({
+async function openRanks(league, matches) {
+  const response = await browser.runtime.sendMessage({
     message: 'element',
     params: {
       league,
       matches,
     },
   })
+  window.location.href = 'ranks.html'
 }
 
 arrayLeague.forEach(element => {

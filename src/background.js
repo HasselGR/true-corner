@@ -131,21 +131,18 @@ browser.alarms.onAlarm.addListener(() => {
   
 })
 
-const sendRankings = async (league, dates) => {
+const sendRankings = async (league, dates, sendResponse) => {
   await browser.storage.local.set({ 'liga': league, 'partidos': dates })
-  browser.browserAction.setPopup({
-    popup: 'ranks.html',
-  })
+  sendResponse({ response: 'Success!' })
 }
 
-browser.runtime.onMessage.addListener((request) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.message) {
     case 'element':
-      sendRankings(request.params.league, request.params.matches)
-      break
+      sendRankings(request.params.league, request.params.matches, sendResponse)
+      return true
     default:
       console.log(request, 'request not handled')
   }
 })
-
 
