@@ -25,9 +25,9 @@ const anotherLeagues = ['2664', '2857', '1333', '780', '2656', '1341', '1326']
 const anotherNames = ['Ligue_1', 'Serie_A', 'Copa_Do_Brazil', 'Primera_Division_Argentina', 'Liga_MX', 'Primera_Division_Peruana', 'Primera_A']
 const anotherMatches = ['Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches', 'Primera_A_matches']
 
-const leagues = ['2790', '2833']
-const names = ['Premier League', 'La Liga']
-const matches = ['Premier_League_matches', 'La_Liga_matches']
+const leagues = ['2790', '2833', '2664', '2857', '1333', '780', '2656', '1341', '1326']
+const names = ['Premier League', 'La Liga', 'Ligue_1', 'Serie_A', 'Copa_Do_Brazil', 'Primera_Division_Argentina', 'Liga_MX', 'Primera_Division_Peruana', 'Primera_A']
+const matches = ['Premier_League_matches', 'La_Liga_matches', 'Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches', 'Primera_A_matches']
 
 let ranks = {}
 let current = ''
@@ -70,36 +70,42 @@ const getStandings = (league, name, matches) => {
   //   .catch(error => console.log(error))
 
 
-  fetch(`https://v2.api-football.com/fixtures/league/2790/Regular_Season_-_7/`, requestOptions)
+  fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
     .then(response => response.json())
     .then(data => {
       // console.log('games', data)
       const fixtures = data.api.fixtures
       let games = []
+      let date = new Date()
       fixtures.forEach(element => {
-        const match = {
-          awayTeamName: element.awayTeam.team_name,
-          awayTeamLogo: element.awayTeam.logo,
-          date: element.event_date,
-          firstStart: element.firstHalfStart,
-          goalsAway: element.goalsAwayTeam,
-          goalsHome: element.goalsHomeTeam,
-          homeTeamName: element.homeTeam.team_name,
-          homeTeamLogo: element.homeTeam.logo,
-          scoreHalfTime: element.score.halftime,
-          scoreFullTime: element.score.fulltime,
-          scoreExtraTime: element.score.extratime,
-          scorePenalty: element.score.penalty,
-          status: element.status,
-          venue: element.venue,
+        let dateOld = new Date()
+        dateOld.setDate(dateOld.getDate() - 7)
+        let dateEvent = new Date(element.event_date)
+
+        if (dateOld < dateEvent && dateEvent < date) {
+          const match = {
+            awayTeamName: element.awayTeam.team_name,
+            awayTeamLogo: element.awayTeam.logo,
+            date: element.event_date,
+            firstStart: element.firstHalfStart,
+            goalsAway: element.goalsAwayTeam,
+            goalsHome: element.goalsHomeTeam,
+            homeTeamName: element.homeTeam.team_name,
+            homeTeamLogo: element.homeTeam.logo,
+            scoreHalfTime: element.score.halftime,
+            scoreFullTime: element.score.fulltime,
+            scoreExtraTime: element.score.extratime,
+            scorePenalty: element.score.penalty,
+            status: element.status,
+            venue: element.venue,
+          }
+          games.push(match)
         }
-        games.push(match)
       })
       console.log('games before insertion', games)
       browser.storage.local.set({ [ matches ]: games })
     })
     .catch(error => console.log(error))
-
 }
 
 browser.runtime.onInstalled.addListener(() => {
@@ -113,7 +119,7 @@ browser.runtime.onInstalled.addListener(() => {
   browser.storage.local.set({ date: date.toString() })
 
   let test = browser.storage.local.get()
-  test.then( data => {
+  test.then(data => {
     console.log('data of storage', data)
   })
 })
@@ -128,7 +134,6 @@ browser.alarms.onAlarm.addListener(() => {
   leagues.forEach((element, index) => {
     getStandings(element, names[index])
   })
-  
 })
 
 const sendRankings = async (league, dates, sendResponse) => {

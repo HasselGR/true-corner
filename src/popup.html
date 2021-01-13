@@ -3,46 +3,61 @@
 <head>
   <meta charset="utf-8">
   <title>Popup</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" href="popup.css">
-  
 </head>
 <body>
-  <h1>True Corner</h1>
+  <h5>True Corner</h5>
   <div id = "info">
 
   </div>
-  <div class ="grid-container">
-    <div class="grid-item">
-      <button id = 'UK'><img  src='https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1200px-Flag_of_the_United_Kingdom.svg.png' alt="United Kingdom" width='35' height='25'> <br> Premier League</button>
+  <div class ="sidenav">
+    <div>
+      <button id = 'UK'>Premier League</button>
     </div>
-    <div class="grid-item">
-      <button id ='ES'><img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Spain.svg/1200px-Flag_of_Spain.svg.png" alt="Spain" width='35' height='25' > <br> La Liga</button>
+    <div>
+      <button id ='ES'>La Liga</button>
     </div>
-    <div class="grid-item">
-      <button id ='FR'><img  src='https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg' alt='France' width='35' height='25' > <br> Ligue 1</button>
+    <div>
+      <button id ='FR'>Ligue 1</button>
     </div>
-    <div class="grid-item">
-      <button id ='IT'><img  src='https://upload.wikimedia.org/wikipedia/commons/0/03/Flag_of_Italy.svg' alt='Italia' width='35' height='25' > <br> Serie A</button>
+    <div>
+      <button id ='IT'>Serie A</button>
     </div>
-    <div class="grid-item">
-      <button id ='BR'><img  src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/300px-Flag_of_Brazil.svg.png' alt='Brazil' width='35' height='25' > <br> Copa Do Brazil</button>
+    <div>
+      <button id ='BR'>Copa Do Brazil</button>
     </div>
-    <div class="grid-item">
-      <button id ='AR'><img  src='https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg' alt='Argentina' width='35' height='25' > <br> Primera División Argentina</button>
+    <div>
+      <button id ='AR'>Primera División Argentina</button>
     </div>
-    <div class="grid-item">
-      <button id ='MX'><img  src='https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg' alt='Mexico' width='35' height='25' > <br> Liga MX</button>
+    <div>
+      <button id ='MX'>Liga MX</button>
     </div>
-    <div class="grid-item">
-      <button id ='PE'><img  src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Flag_of_Peru_%281825-1950%29.svg/220px-Flag_of_Peru_%281825-1950%29.svg.png' alt='Peru' width='35' height='25' > <br> Primera División Peruana</button>
+    <div>
+      <button id ='PE'>Primera División Peruana</button>
     </div>
-    <div class="grid-item">
-      <button id ='CO'><img  src='https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/1280px-Flag_of_Colombia.svg.png' alt='Colombia' width='35' height='25' > <br> Primera A</button>
+    <div>
+      <button id ='CO'>Primera A</button>
     </div>  
   </div>
 
 
   <div id="results">
+    <h1 id="titleMatches" class="text-success text-center"></h1>
+    <div id="matches" class="border border-secondary rounded container">
+      <div class="d-flex row"> 
+        <div id="homeTeam" class="col-4 border-right border-bottom text-center ">
+
+        </div>
+        <div id="score" class="col-4 border-left border-right border-bottom text-center">
+
+        </div>
+        <div id="awayTeam" class="col-4 border-left border-bottom text-center">
+
+        </div>
+      </div>
+    </div>
+    <br> <br> <br> <br> <br>
     <h1 id="league" class="text-success text-center"></h1>
     <div id="table" class="border border-secondary rounded container">
       <div class="row">
@@ -72,22 +87,8 @@
         </div>
       </div>
     </div>
-    <br> <br> <br> <br> <br>
-    <div id="matches" class="border border-secondary rounded container">
-      <div class="d-flex row"> 
-        <div id="homeTeam" class="col-4 border-right border-bottom text-center ">
-
-        </div>
-        <div id="score" class="col-4 border-left border-right border-bottom text-center">
-
-        </div>
-        <div id="awayTeam" class="col-4 border-left border-bottom text-center">
-
-        </div>
-      </div>
-    </div>
   </div>
-  </div>
+  
 
   <footer id ="footer">
     

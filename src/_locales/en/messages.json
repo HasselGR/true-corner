@@ -14,7 +14,7 @@
   "team":{
     "message": "Team"
   },
-  "matches": {
+  "games": {
     "message": "Matches"
   },
   "wins": {
@@ -31,5 +31,8 @@
   },
   "goalsDiff": {
     "message": "GoalsDiff"
+  },
+  "titleMatches": {
+    "message": "Matches"
   }
 }

@@ -3,7 +3,7 @@ import browser from 'webextension-polyfill'
 
 let rankings = document.getElementById('table')
 let round = document.getElementById('matches')
-let back = document.getElementById('back')
+
 const centeredRight = 'col-sm border-right justify-content d-flex align-items-center flex-column'
 const centeredLeft = 'col-sm border-left justify-content d-flex align-items-center flex-column'
 const centered = 'col-sm  justify-content d-flex align-items-center flex-column'
@@ -48,6 +48,7 @@ const addTag = () => {
     tag.appendChild(document.createTextNode(arrayTags[index]))
     parent.appendChild(tag)
   })
+  
 }
 
 const addLeague = (league) => {
@@ -60,6 +61,8 @@ const init = async () => {
   const league = (await browser.storage.local.get('liga'))['liga']
   console.log('League: ', league)
   addLeague(league)
+  let matchesTitle = document.getElementById('titleMatches')
+  matchesTitle.appendChild(document.createTextNode(browser.i18n.getMessage('titleMatches')))
   const table = browser.storage.local.get(league)
   table.then(data => {
     console.log('league data', data)
@@ -102,13 +105,6 @@ const init = async () => {
   })
 }
 
-back.addEventListener('click', () => {
-  // browser.browserAction.setPopup({
-  //   popup: 'popup.html',
-  // })
-  window.location.href = 'popup.html'
-  // browser.browserAction.openPopup()
-})
 
 // awayTeamName: element.awayTeam.team_name,
 //           awayTeamLogo: element.awayTeam.logo,
