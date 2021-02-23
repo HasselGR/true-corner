@@ -43,3 +43,8 @@ h6{
   font-size: xx-small;
   font-weight: 500;
 }
+
+img{
+  width: 50px;
+  filter: grayscale(100%);
+}
