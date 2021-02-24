@@ -156,7 +156,6 @@ const getStandings = async (league, name, matchParam) => {
       const message = { message: dataTable.api.error }
       throw message
     }
-    console.log('Data Table: ', dataTable)
     const tables = dataTable.api.standings.flat()
     let teams = []
     // console.log('tables', tables)
@@ -187,31 +186,32 @@ const getStandings = async (league, name, matchParam) => {
     const fixtures = dataLeague.api.fixtures
     let games = []
     let date = new Date()
-    fixtures.forEach((element) => {
-      let dateOld = new Date()
-      dateOld.setDate(dateOld.getDate() - 7)
-      let dateEvent = new Date(element.event_date)
-
-      if (dateOld < dateEvent && dateEvent < date) {
-        const match = {
-          awayTeamName: element.awayTeam.team_name,
-          awayTeamLogo: element.awayTeam.logo,
-          date: element.event_date,
-          firstStart: element.firstHalfStart,
-          goalsAway: element.goalsAwayTeam,
-          goalsHome: element.goalsHomeTeam,
-          homeTeamName: element.homeTeam.team_name,
-          homeTeamLogo: element.homeTeam.logo,
-          scoreHalfTime: element.score.halftime,
-          scoreFullTime: element.score.fulltime,
-          scoreExtraTime: element.score.extratime,
-          scorePenalty: element.score.penalty,
-          status: element.status,
-          venue: element.venue,
+    if (fixtures) {
+      fixtures.forEach((element) => {
+        let dateOld = new Date()
+        dateOld.setDate(dateOld.getDate() - 7)
+        let dateEvent = new Date(element.event_date)
+        if (dateOld < dateEvent && dateEvent < date) {
+          const match = {
+            awayTeamName: element.awayTeam.team_name,
+            awayTeamLogo: element.awayTeam.logo,
+            date: element.event_date,
+            firstStart: element.firstHalfStart,
+            goalsAway: element.goalsAwayTeam,
+            goalsHome: element.goalsHomeTeam,
+            homeTeamName: element.homeTeam.team_name,
+            homeTeamLogo: element.homeTeam.logo,
+            scoreHalfTime: element.score.halftime,
+            scoreFullTime: element.score.fulltime,
+            scoreExtraTime: element.score.extratime,
+            scorePenalty: element.score.penalty,
+            status: element.status,
+            venue: element.venue,
+          }
+          games.push(match)
         }
-        games.push(match)
-      }
-    })
+      })
+    }
     console.log('games before insertion', games)
     // browser.storage.local.set({ [ match ]: games })
     await setStorage([matchParam], games)
