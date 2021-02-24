@@ -117,6 +117,15 @@ const addImgSpan = (row, name, style, size = '150') => {
   row.appendChild(img)
 }
 
+const addTag = () => {
+  arrayStats.forEach(stat => {
+    let parent = document.getElementById(stat)
+    let tag = document.createElement('h6')
+    tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
+    parent.appendChild(tag)
+  })
+}
+
 
 async function openRanks(league, matches) {
   let header = document.getElementById('leaguename')
@@ -199,16 +208,6 @@ let rankingsButton = document.getElementById('watchStandings')
 
 const arrayTags = ['Home Team', 'Status', 'Away Team']
 const arrayMatchesStats = ['homeTeamLogo', 'scoreFullTime', 'awayTeamLogo']
-
-
-const addTag = () => {
-  arrayStats.forEach(stat => {
-    let parent = document.getElementById(stat)
-    let tag = document.createElement('h6')
-    tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
-    parent.appendChild(tag)
-  })
-}
 
 const addLeague = (league) => {
   let header = document.getElementById('league')
