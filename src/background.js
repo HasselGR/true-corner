@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill'
-import { setStorage, getStorage, sendBackgroundCommand } from './lib/common'
+import { setStorage, sendBackgroundCommand } from './lib/common'
 
 let myHeaders = new Headers()
 myHeaders.append('X-RapidAPI-Key', 'c327b55042017e95c88560420ee64e35')
@@ -49,7 +49,6 @@ const get = async (sender) => {
   }
 }
 
-
 var requestOptions = {
   method: 'GET',
   headers: myHeaders,
@@ -74,46 +73,151 @@ THESE ARE THE LEAGUE CODES, WHEN A LEAGUE GETS OUTDATED, YO SHOULD SEARCH FOR TH
  1264: Major League soccer
 */
 
-/*the another are for release purposes, as fetchs are limited*/
-const anotherLeagues = ['2664', '2857', '1333', '3265', '2656', '1341', '3113', '2755', '1374', '2673', '1342', '1264']
-const anotherNames = ['Ligue 1', 'Serie A', 'Copa Do Brazil', 'Primera Division Argentina', 'Liga MX', 'Primera Division Peruana', 'Primera A', 'Bundesliga', 'Campeonato Uruguayo', 'Eredivisie', 'Primera Division de Chile', 'Major League Soccer']
-const anotherMatches = ['Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches', 'Primera_A_matches', 'Bundesliga_matches', 'Campeonato_Uruguayo_matches', 'Eredivisie_matches', 'Primera_Division_de_Chile_matches', 'Major_League_Soccer_matches']
+/* the another are for release purposes, as fetchs are limited */
+const anotherLeagues = [
+  '2664',
+  '2857',
+  '1333',
+  '3265',
+  '2656',
+  '1341',
+  '3113',
+  '2755',
+  '1374',
+  '2673',
+  '1342',
+  '1264',
+]
+const anotherNames = [
+  'Ligue 1',
+  'Serie A',
+  'Copa Do Brazil',
+  'Primera Division Argentina',
+  'Liga MX',
+  'Primera Division Peruana',
+  'Primera A',
+  'Bundesliga',
+  'Campeonato Uruguayo',
+  'Eredivisie',
+  'Primera Division de Chile',
+  'Major League Soccer',
+]
+const anotherMatches = [
+  'Ligue_1_matches',
+  'Serie_A_matches',
+  'Copa_Do_Brazil_matches',
+  'Primera_Division_Argentina_matches',
+  'Liga_MX_matches',
+  'Primera_Division_Peruana_matches',
+  'Primera_A_matches',
+  'Bundesliga_matches',
+  'Campeonato_Uruguayo_matches',
+  'Eredivisie_matches',
+  'Primera_Division_de_Chile_matches',
+  'Major_League_Soccer_matches',
+]
 
-
-/*These are the ones that are used in the release, if you want to debug, you should put less things here*/
+/* These are the ones that are used in the release, if you want to debug, you should put less things here */
 const leagues = ['2790', '2833', '2664', '2857', '1333', '3265', '2656', '1341']
-const names = ['Premier League', 'La Liga', 'Ligue 1', 'Serie A', 'Copa Do Brazil', 'Primera Division Argentina', 'Liga MX', 'Primera Division Peruana']
-const matches = ['Premier_League_matches', 'La_Liga_matches', 'Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches']
+const names = [
+  'Premier League',
+  'La Liga',
+  'Ligue 1',
+  'Serie A',
+  'Copa Do Brazil',
+  'Primera Division Argentina',
+  'Liga MX',
+  'Primera Division Peruana',
+]
+const matches = [
+  'Premier_League_matches',
+  'La_Liga_matches',
+  'Ligue_1_matches',
+  'Serie_A_matches',
+  'Copa_Do_Brazil_matches',
+  'Primera_Division_Argentina_matches',
+  'Liga_MX_matches',
+  'Primera_Division_Peruana_matches',
+]
 
 let ranks = {}
 let current = ''
 
-//This method is for getting the data of the standings for every league, it is used with the arrays above
-const getStandings = (league, name, matches) => {
-  fetch(`https://v2.api-football.com/leagueTable/${league}`, requestOptions)
-    .then(response => response.json())
-    .then(data => {
-      const tables = data.api.standings.flat()
-      let teams = []
-      // console.log('tables', tables)
-      tables.forEach(element => {
-        const team = {
-          ranking: element.rank,
-          team:  element.teamName,
-          games: element.all.matchsPlayed,
-          wins: element.all.win,
-          losses: element.all.lose,
-          draws: element.all.draw,
-          points: element.points,
-          goalsDiff: element.goalsDiff,
-        }
-        teams.push(team)
-      })
-      console.log('teams before insertion', teams)
-      // browser.storage.local.set({ [ name ]: teams })
-      setStorage([name], teams)
+// This method is for getting the data of the standings for every league, it is used with the arrays above
+const getStandings = async (league, name, matchParam) => {
+  try {
+    const responseTable = await fetch(
+      `https://v2.api-football.com/leagueTable/${league}`,
+      requestOptions,
+    )
+    const dataTable = await responseTable.json()
+    console.log('Data Table: ', dataTable)
+    if (dataTable.api.error) {
+      const message = { message: dataTable.api.error }
+      throw message
+    }
+    console.log('Data Table: ', dataTable)
+    const tables = dataTable.api.standings.flat()
+    let teams = []
+    // console.log('tables', tables)
+    tables.forEach((element) => {
+      const team = {
+        ranking: element.rank,
+        team: element.teamName,
+        games: element.all.matchsPlayed,
+        wins: element.all.win,
+        losses: element.all.lose,
+        draws: element.all.draw,
+        points: element.points,
+        goalsDiff: element.goalsDiff,
+      }
+      teams.push(team)
     })
-    .catch(error => console.log(error))
+    console.log('teams before insertion', teams)
+    // browser.storage.local.set({ [ name ]: teams })
+    await setStorage([name], teams)
+
+    const responseLeague = await fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
+    const dataLeague = await responseLeague.json()
+    if (dataLeague.api.error) {
+      const message = { message: dataLeague.api.error }
+      throw message
+    }
+    // console.log('games', data)
+    const fixtures = dataLeague.api.fixtures
+    let games = []
+    let date = new Date()
+    fixtures.forEach((element) => {
+      let dateOld = new Date()
+      dateOld.setDate(dateOld.getDate() - 7)
+      let dateEvent = new Date(element.event_date)
+
+      if (dateOld < dateEvent && dateEvent < date) {
+        const match = {
+          awayTeamName: element.awayTeam.team_name,
+          awayTeamLogo: element.awayTeam.logo,
+          date: element.event_date,
+          firstStart: element.firstHalfStart,
+          goalsAway: element.goalsAwayTeam,
+          goalsHome: element.goalsHomeTeam,
+          homeTeamName: element.homeTeam.team_name,
+          homeTeamLogo: element.homeTeam.logo,
+          scoreHalfTime: element.score.halftime,
+          scoreFullTime: element.score.fulltime,
+          scoreExtraTime: element.score.extratime,
+          scorePenalty: element.score.penalty,
+          status: element.status,
+          venue: element.venue,
+        }
+        games.push(match)
+      }
+    })
+    console.log('games before insertion', games)
+    // browser.storage.local.set({ [ match ]: games })
+    await setStorage([matchParam], games)
+  } catch (error) {
+    console.log(error)
+  }
 
   // FOR FETCHING THE CURRENT ROUND, FIX.
   // fetch(`https://v2.api-football.com/fixtures/rounds/${league}/current`, {
@@ -126,60 +230,23 @@ const getStandings = (league, name, matches) => {
   //     console.log(`fixture fetch: https://v2.api-football.com/fixtures/league/${league}/${current}`)
   //   })
   //   .catch(error => console.log(error))
-
-
-  fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
-    .then(response => response.json())
-    .then(data => {
-      // console.log('games', data)
-      const fixtures = data.api.fixtures
-      let games = []
-      let date = new Date()
-      fixtures.forEach(element => {
-        let dateOld = new Date()
-        dateOld.setDate(dateOld.getDate() - 7)
-        let dateEvent = new Date(element.event_date)
-
-        if (dateOld < dateEvent && dateEvent < date) {
-          const match = {
-            awayTeamName: element.awayTeam.team_name,
-            awayTeamLogo: element.awayTeam.logo,
-            date: element.event_date,
-            firstStart: element.firstHalfStart,
-            goalsAway: element.goalsAwayTeam,
-            goalsHome: element.goalsHomeTeam,
-            homeTeamName: element.homeTeam.team_name,
-            homeTeamLogo: element.homeTeam.logo,
-            scoreHalfTime: element.score.halftime,
-            scoreFullTime: element.score.fulltime,
-            scoreExtraTime: element.score.extratime,
-            scorePenalty: element.score.penalty,
-            status: element.status,
-            venue: element.venue,
-          }
-          games.push(match)
-        }
-      })
-      console.log('games before insertion', games)
-      // browser.storage.local.set({ [ matches ]: games })
-      setStorage([matches], games)
-    })
-    .catch(error => console.log(error))
 }
 
-browser.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(async () => {
   browser.browserAction.setPopup({
     popup: 'popup.html',
   })
+  const promises = []
   leagues.forEach((element, index) => {
-    getStandings(element, names[index], matches[index])
+    promises.push(getStandings(element, names[index], matches[index]))
   })
+  await Promise.all(promises)
   const date = new Date()
   // browser.storage.local.set({ date: date.toString() })
-  setStorage('date', date.toString())
+  await setStorage('date', date.toString())
 
   let test = browser.storage.local.get()
-  test.then(data => {
+  test.then((data) => {
     console.log('data of storage', data)
   })
 })
@@ -189,15 +256,16 @@ const updater = browser.alarms.create('Daily Updater', {
   periodInMinutes: 1440,
 })
 
-
-browser.alarms.onAlarm.addListener(() => {
+browser.alarms.onAlarm.addListener(async () => {
+  const promises = []
   leagues.forEach((element, index) => {
-    getStandings(element, names[index])
+    promises.push(getStandings(element, names[index], matches[index]))
   })
+  await Promise.all(promises)
 })
 
 const sendRankings = async (league, dates, sendResponse) => {
-  await browser.storage.local.set({ 'liga': league, 'partidos': dates })
+  await browser.storage.local.set({ liga: league, partidos: dates })
   sendResponse({ response: 'Success!' })
 }
 
@@ -213,4 +281,3 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       console.log(request, 'request not handled')
   }
 })
-

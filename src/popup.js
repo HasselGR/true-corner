@@ -1,7 +1,6 @@
 import browser from 'webextension-polyfill'
 import { setStorage, getStorage } from './lib/common'
 
-
 let footer = document.getElementById('footer')
 const arrayLeague = [
   {
@@ -90,7 +89,6 @@ const addStat = (row, name, style, type = 'h6') => {
   row.appendChild(column)
 }
 
-
 const addSpan = (row, name, style) => {
   let span = document.createElement('span')
   span.setAttribute('class', style)
@@ -117,7 +115,6 @@ const addImgSpan = (row, name, style, size = '150') => {
   row.appendChild(img)
 }
 
-
 async function openRanks(league, matches) {
   let header = document.getElementById('leaguename')
   header.innerHTML = ''
@@ -135,7 +132,7 @@ async function openRanks(league, matches) {
   header.appendChild(name)
   let headerRemove = document.getElementById('league')
   headerRemove.innerHTML = ''
-  arrayStats.forEach(stat => {
+  arrayStats.forEach((stat) => {
     let parent = document.getElementById(stat)
     parent.innerHTML = ''
   })
@@ -156,32 +153,27 @@ async function openRanks(league, matches) {
   document.documentElement.scrollTop = 0
 }
 
-arrayLeague.forEach(element => {
+arrayLeague.forEach((element) => {
   const button = document.getElementById(element.country)
   button.addEventListener('click', () => {
     openRanks(element.league, element.matches)
     let change = document.querySelectorAll('.blackwhite')
-    change.forEach(image => {
+    change.forEach((image) => {
       image.style.filter = 'grayscale(100%)'
     })
     button.style.filter = 'grayscale(0%)'
   })
 })
 
-
 const addDate = () => {
-  browser.storage.local.get('date')
-    .then(data => {
-      let tag = document.createElement('h5')
-      tag.appendChild(document.createTextNode(`Last updated since: ${data.date}`))
-      footer.append(tag)
-    })
+  browser.storage.local.get('date').then((data) => {
+    let tag = document.createElement('h5')
+    tag.appendChild(document.createTextNode(`Last updated since: ${data.date}`))
+    footer.append(tag)
+  })
 }
 
-
-
 addDate()
-
 
 // END OF THE POPUP.JS FILE
 // START OF THE RANKS.JS FILE
@@ -191,18 +183,11 @@ let round = document.getElementById('matches')
 let matchesButton = document.getElementById('watchMatches')
 let rankingsButton = document.getElementById('watchStandings')
 
-
-
-
-
-
-
 const arrayTags = ['Home Team', 'Status', 'Away Team']
 const arrayMatchesStats = ['homeTeamLogo', 'scoreFullTime', 'awayTeamLogo']
 
-
 const addTag = () => {
-  arrayStats.forEach(stat => {
+  arrayStats.forEach((stat) => {
     let parent = document.getElementById(stat)
     let tag = document.createElement('h6')
     tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
@@ -223,40 +208,47 @@ const init = async (leagueParameter, matchesParameter) => {
   // const table = browser.storage.local.get(leagueParameter)
   const table = await getStorage(leagueParameter)
 
-  table.forEach(team => {
-    let row = document.createElement('div')
-    row.setAttribute('class', 'row')
-    arrayStats.forEach(element => {
-      addStat(row, team[element], 'col-sm border-right')
+  if (table) {
+    table.forEach((team) => {
+      let row = document.createElement('div')
+      row.setAttribute('class', 'row')
+      arrayStats.forEach((element) => {
+        addStat(row, team[element], 'col-sm border-right')
+      })
+      rankings.append(row)
     })
-    rankings.append(row)
-  })
-
+  }
 
   // const matches = (await browser.storage.local.get(matchesParameter))
   const matches = await getStorage(matchesParameter)
   console.log('matches:', matches)
   // const rounds = browser.storage.local.get(matchesParameter)
   const rounds = await getStorage(matchesParameter)
-  console.log('matches data', rounds)
-  rounds.forEach(match => {
-    let row = document.createElement('div')
-    row.setAttribute('class', 'row')
-    addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
-    addStat(row, ' ', 'separation')
-    addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
-    // addImg(row, match.homeTeamlogo, 'teamlogos')
-    addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
-    addSpan(row, match.scoreFullTime, 'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom')
-    addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
-    // addImg(row, match.awayTeamlogo, 'teamlogos')
-    addSpan(row, match.awayTeamName, 'd-flex align-items-center border-bottom')
-    let breakline = document.createElement('br')
-    round.append(row)
-    let row2 = document.createElement('div')
-    row2.setAttribute('class', 'row ')// border-bottom
-    round.append(row2)
-  })
+  if (rounds) {
+    console.log('matches data', rounds)
+    rounds.forEach((match) => {
+      let row = document.createElement('div')
+      row.setAttribute('class', 'row')
+      addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
+      addStat(row, ' ', 'separation')
+      addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
+      // addImg(row, match.homeTeamlogo, 'teamlogos')
+      addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
+      addSpan(
+        row,
+        match.scoreFullTime,
+        'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom',
+      )
+      addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
+      // addImg(row, match.awayTeamlogo, 'teamlogos')
+      addSpan(row, match.awayTeamName, 'd-flex align-items-center border-bottom')
+      let breakline = document.createElement('br')
+      round.append(row)
+      let row2 = document.createElement('div')
+      row2.setAttribute('class', 'row ') // border-bottom
+      round.append(row2)
+    })
+  }
 }
 // TO INSERT MATCHES
 // let row = document.createElement('div')
@@ -286,7 +278,6 @@ rankingsButton.addEventListener('click', () => {
   round.style.display = 'none'
 })
 
-
 // awayTeamName: element.awayTeam.team_name,
 //           awayTeamLogo: element.awayTeam.logo,
 //           date: element.event_date,
@@ -301,7 +292,5 @@ rankingsButton.addEventListener('click', () => {
 //           scorePenalty: element.score.penalty,
 //           status: element.status,
 //           venue: element.venue,
-
-
 
 console.log('Works!')
