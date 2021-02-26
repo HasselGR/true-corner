@@ -105,7 +105,7 @@ THESE ARE THE LEAGUE CODES, WHEN A LEAGUE GETS OUTDATED, YO SHOULD SEARCH FOR TH
  1264: Major League soccer
 */
 
-/*the another are for release purposes, as fetchs are limited */
+/* the another are for release purposes, as fetchs are limited */
 const anotherLeagues = [
   '2664',
   '2857',
@@ -149,7 +149,7 @@ const anotherMatches = [
   'Major_League_Soccer_matches',
 ]
 
-/*These are the ones that are used in the release, if you want to debug, you should put less things here*/
+/* These are the ones that are used in the release, if you want to debug, you should put less things here */
 const leagues = ['2790', '2833', '2664', '2857', '1333', '3265', '2656', '1341']
 const names = [
   'Premier League',
@@ -176,56 +176,53 @@ let ranks = {}
 let current = ''
 
 // This method is for getting the data of the standings for every league, it is used with the arrays above
-const getStandings = (league, name, matches) => {
-  fetch(`https://v2.api-football.com/leagueTable/${league}`, requestOptions)
-    .then((response) => response.json())
-    .then((data) => {
-      const tables = data.api.standings.flat()
-      let teams = []
-      // console.log('tables', tables)
-      tables.forEach((element) => {
-        const team = {
-          ranking: element.rank,
-          team: element.teamName,
-          games: element.all.matchsPlayed,
-          wins: element.all.win,
-          losses: element.all.lose,
-          draws: element.all.draw,
-          points: element.points,
-          goalsDiff: element.goalsDiff,
-        }
-        teams.push(team)
-      })
-      console.log('teams before insertion', teams)
-      // browser.storage.local.set({ [ name ]: teams })
-      setStorage([name], teams)
+const getStandings = async (league, name, matchParam) => {
+  try {
+    const responseTable = await fetch(
+      `https://v2.api-football.com/leagueTable/${league}`,
+      requestOptions,
+    )
+    const dataTable = await responseTable.json()
+    console.log('Data Table: ', dataTable)
+    if (dataTable.api.error) {
+      const message = { message: dataTable.api.error }
+      throw message
+    }
+    const tables = dataTable.api.standings.flat()
+    let teams = []
+    // console.log('tables', tables)
+    tables.forEach((element) => {
+      const team = {
+        ranking: element.rank,
+        team: element.teamName,
+        games: element.all.matchsPlayed,
+        wins: element.all.win,
+        losses: element.all.lose,
+        draws: element.all.draw,
+        points: element.points,
+        goalsDiff: element.goalsDiff,
+      }
+      teams.push(team)
     })
-    .catch((error) => console.log(error))
+    console.log('teams before insertion', teams)
+    // browser.storage.local.set({ [ name ]: teams })
+    await setStorage([name], teams)
 
-  // FOR FETCHING THE CURRENT ROUND, FIX.
-  // fetch(`https://v2.api-football.com/fixtures/rounds/${league}/current`, {
-  //   method: 'GET',
-  //   headers: myHeaders,
-  // }).then(response => response.json())
-  //   .then(data => {
-  //     current = `${data.api.fixtures[0]}/`
-  //     console.log('current', current)
-  //     console.log(`fixture fetch: https://v2.api-football.com/fixtures/league/${league}/${current}`)
-  //   })
-  //   .catch(error => console.log(error))
-
-  fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
-    .then((response) => response.json())
-    .then((data) => {
-      // console.log('games', data)
-      const fixtures = data.api.fixtures
-      let games = []
-      let date = new Date()
+    const responseLeague = await fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
+    const dataLeague = await responseLeague.json()
+    if (dataLeague.api.error) {
+      const message = { message: dataLeague.api.error }
+      throw message
+    }
+    // console.log('games', data)
+    const fixtures = dataLeague.api.fixtures
+    let games = []
+    let date = new Date()
+    if (fixtures) {
       fixtures.forEach((element) => {
         let dateOld = new Date()
         dateOld.setDate(dateOld.getDate() - 7)
         let dateEvent = new Date(element.event_date)
-
         if (dateOld < dateEvent && dateEvent < date) {
           const match = {
             awayTeamName: element.awayTeam.team_name,
@@ -246,23 +243,39 @@ const getStandings = (league, name, matches) => {
           games.push(match)
         }
       })
-      console.log('games before insertion', games)
-      // browser.storage.local.set({ [ matches ]: games })
-      setStorage([matches], games)
-    })
-    .catch((error) => console.log(error))
+    }
+    console.log('games before insertion', games)
+    // browser.storage.local.set({ [ match ]: games })
+    await setStorage([matchParam], games)
+  } catch (error) {
+    console.log(error)
+  }
+
+  // FOR FETCHING THE CURRENT ROUND, FIX.
+  // fetch(`https://v2.api-football.com/fixtures/rounds/${league}/current`, {
+  //   method: 'GET',
+  //   headers: myHeaders,
+  // }).then(response => response.json())
+  //   .then(data => {
+  //     current = `${data.api.fixtures[0]}/`
+  //     console.log('current', current)
+  //     console.log(`fixture fetch: https://v2.api-football.com/fixtures/league/${league}/${current}`)
+  //   })
+  //   .catch(error => console.log(error))
 }
 
-browser.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(async () => {
   browser.browserAction.setPopup({
     popup: 'popup.html',
   })
+  const promises = []
   leagues.forEach((element, index) => {
-    getStandings(element, names[index], matches[index])
+    promises.push(getStandings(element, names[index], matches[index]))
   })
+  await Promise.all(promises)
   const date = new Date()
   // browser.storage.local.set({ date: date.toString() })
-  setStorage('date', date.toString())
+  await setStorage('date', date.toString())
 
   let test = browser.storage.local.get()
   test.then((data) => {
@@ -275,10 +288,12 @@ const updater = browser.alarms.create('Daily Updater', {
   periodInMinutes: 1440,
 })
 
-browser.alarms.onAlarm.addListener(() => {
+browser.alarms.onAlarm.addListener(async () => {
+  const promises = []
   leagues.forEach((element, index) => {
-    getStandings(element, names[index])
+    promises.push(getStandings(element, names[index], matches[index]))
   })
+  await Promise.all(promises)
 })
 
 const sendRankings = async (league, dates, sendResponse) => {
