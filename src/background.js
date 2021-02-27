@@ -81,8 +81,8 @@ const anotherMatches = ['Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_ma
 
 
 /*These are the ones that are used in the release, if you want to debug, you should put less things here*/
-const leagues = ['2790', '2833', '2664', '2857', '1333', '3265', '2656', '1341']
-const names = ['Premier League', 'La Liga', 'Ligue 1', 'Serie A', 'Copa Do Brazil', 'Primera Division Argentina', 'Liga MX', 'Primera Division Peruana']
+const leagues = ['2790', '2833' ]
+const names = ['Premier League', 'La Liga']
 const matches = ['Premier_League_matches', 'La_Liga_matches', 'Ligue_1_matches', 'Serie_A_matches', 'Copa_Do_Brazil_matches', 'Primera_Division_Argentina_matches', 'Liga_MX_matches', 'Primera_Division_Peruana_matches']
 
 let ranks = {}
@@ -90,58 +90,46 @@ let current = ''
 
 //This method is for getting the data of the standings for every league, it is used with the arrays above
 const getStandings = (league, name, matches) => {
-  fetch(`https://v2.api-football.com/leagueTable/${league}`, requestOptions)
+  fetch(`https://v2.api-football.com/leagueTable/${league}`, requestOptions) //you get the data with the key and the league
     .then(response => response.json())
     .then(data => {
-      const tables = data.api.standings.flat()
+      const tables = data.api.standings.flat() //for utility purposes we flatten the array.
       let teams = []
       // console.log('tables', tables)
-      tables.forEach(element => {
+      tables.forEach(element => { //we take each of the elements that concern us and save them.
         const team = {
-          ranking: element.rank,
+          // ranking: element.rank,
           team:  element.teamName,
+          points: element.points,
           games: element.all.matchsPlayed,
           wins: element.all.win,
-          losses: element.all.lose,
           draws: element.all.draw,
-          points: element.points,
-          goalsDiff: element.goalsDiff,
+          losses: element.all.lose,
+          goalsFor: element.all.goalsFor,
+          goalsAgainst: element.all.goalsAgainst,
         }
         teams.push(team)
       })
       console.log('teams before insertion', teams)
       // browser.storage.local.set({ [ name ]: teams })
-      setStorage([name], teams)
+      setStorage([name], teams) //we set the  storage with the teams of the league.
     })
     .catch(error => console.log(error))
 
-  // FOR FETCHING THE CURRENT ROUND, FIX.
-  // fetch(`https://v2.api-football.com/fixtures/rounds/${league}/current`, {
-  //   method: 'GET',
-  //   headers: myHeaders,
-  // }).then(response => response.json())
-  //   .then(data => {
-  //     current = `${data.api.fixtures[0]}/`
-  //     console.log('current', current)
-  //     console.log(`fixture fetch: https://v2.api-football.com/fixtures/league/${league}/${current}`)
-  //   })
-  //   .catch(error => console.log(error))
-
-
+    // Now for all the matches in the last seven days.
   fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
     .then(response => response.json())
     .then(data => {
-      // console.log('games', data)
       const fixtures = data.api.fixtures
       let games = []
-      let date = new Date()
+      let date = new Date()//we get the date right now
       fixtures.forEach(element => {
-        let dateOld = new Date()
+        let dateOld = new Date() //we create a new date and substract seven days from it
         dateOld.setDate(dateOld.getDate() - 7)
-        let dateEvent = new Date(element.event_date)
+        let dateEvent = new Date(element.event_date)//we take the date from the match
 
-        if (dateOld < dateEvent && dateEvent < date) {
-          const match = {
+        if (dateOld < dateEvent && dateEvent < date) { // if it has been in the last seven days.
+          const match = {//we register it...
             awayTeamName: element.awayTeam.team_name,
             awayTeamLogo: element.awayTeam.logo,
             date: element.event_date,
@@ -157,40 +145,35 @@ const getStandings = (league, name, matches) => {
             status: element.status,
             venue: element.venue,
           }
-          games.push(match)
+          games.push(match) ///and push it to the array
         }
       })
-      console.log('games before insertion', games)
+      // console.log('games before insertion', games)
       // browser.storage.local.set({ [ matches ]: games })
-      setStorage([matches], games)
+      setStorage([matches], games) //we save the array on the storage
     })
     .catch(error => console.log(error))
 }
 
-browser.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(() => { //once installed we set the popup
   browser.browserAction.setPopup({
     popup: 'popup.html',
   })
-  leagues.forEach((element, index) => {
+  leagues.forEach((element, index) => {  // we fetch the leagues standings and matches.
     getStandings(element, names[index], matches[index])
   })
   const date = new Date()
-  // browser.storage.local.set({ date: date.toString() })
-  setStorage('date', date.toString())
 
-  let test = browser.storage.local.get()
-  test.then(data => {
-    console.log('data of storage', data)
-  })
+  setStorage('date', date.toString())
 })
 
-const updater = browser.alarms.create('Daily Updater', {
+const updater = browser.alarms.create('Daily Updater', { //this is the daily updater, each day it will update for new matches and new standings.
   delayInMinutes: 1440,
   periodInMinutes: 1440,
 })
 
 
-browser.alarms.onAlarm.addListener(() => {
+browser.alarms.onAlarm.addListener(() => { //when the updater is triggered we fetch again everything
   leagues.forEach((element, index) => {
     getStandings(element, names[index])
   })

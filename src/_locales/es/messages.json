@@ -12,26 +12,30 @@
     "message": "Lugar"
   },
   "team":{
-    "message": "Equipo"
+    "message": "Equipos"
   },
   "games": {
-    "message": "Partidos"
+    "message": "PJ"
   },
   "wins": {
-    "message": "Ganados"
+    "message": "PG"
   },
   "losses": {
-    "message": "Perdidos"
+    "message": "PP"
   },
   "draws": {
-    "message": "Empates"
+    "message": "PE"
   },
   "points":{
-    "message": "Puntos"
+    "message": "PT"
   },
-  "goalsDiff": {
-    "message": "Diff.Goles"
+  "goalsFor": {
+    "message": "GF"
   },
+  "goalsAgainst": {
+    "message": "GC"
+  }
+  ,
   "titleMatches": {
     "message": "Partidos"
   }

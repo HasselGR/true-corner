@@ -3,6 +3,10 @@ import { setStorage, getStorage } from './lib/common'
 
 
 let footer = document.getElementById('footer')
+
+// this is for getting the data stored,and for building interactivity.
+// country is for getting the ids of the buttons in the league
+// league, and matches are for getting the standings and matches, respectively
 const arrayLeague = [
   {
     country: 'UK',
@@ -75,12 +79,32 @@ const arrayLeague = [
     matches: 'Major_League_Soccer_matches',
   },
 ]
-const arrayStats = ['ranking', 'team', 'games', 'wins', 'losses', 'draws', 'points', 'goalsDiff']
-const arrayMatches = ['homeTeam', 'score', 'awayTeam']
-const centeredRight = 'col-sm border-right justify-content d-flex align-items-center flex-column'
-const centeredLeft = 'col-sm border-left justify-content d-flex align-items-center flex-column'
+
+let rankings = document.getElementById('table')
+let round = document.getElementById('matches')
+let matchesButton = document.getElementById('watchMatches')
+let rankingsButton = document.getElementById('watchStandings')
+
+const arrayStats = ['team', 'points', 'games', 'wins', 'draws', 'losses', 'goalsFor', 'goalsAgainst']
+
 const centered = 'justify-content d-flex align-items-center flex-column'
 
+const addTag = () => {
+  arrayStats.forEach(stat => {
+    let parent = document.getElementById(stat)
+    let tag = document.createElement('h6')
+    tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
+    parent.appendChild(tag)
+  })
+}
+
+
+const addLeague = (league) => {
+  let header = document.getElementById('league')
+  header.appendChild(document.createTextNode(`League: ${league}`))
+}
+
+// functions to add stats, imgs, spans, everything here is for adding the data for the popup-
 const addStat = (row, name, style, type = 'h6') => {
   let column = document.createElement('div')
   column.setAttribute('class', style)
@@ -108,17 +132,66 @@ const addImg = (row, name, style, size = '150', styleindiv = '') => {
   column.append(stat)
   row.appendChild(column)
 }
-const addImgSpan = (row, name, style, size = '150') => {
-  let img = document.createElement('img')
-  img.setAttribute('class', style)
-  img.setAttribute('width', size)
-  img.setAttribute('height', size)
-  img.setAttribute('src', name)
-  row.appendChild(img)
+
+// This method inits and adds its respective league and matches, depending on the parameter sent..
+const init = async (leagueParameter, matchesParameter) => {
+  const league = await getStorage(leagueParameter)
+  console.log('League: ', league)
+  const table = await getStorage(leagueParameter)
+  let flag = 0
+  table.forEach(team => {
+    let row = document.createElement('div')
+    if (flag === 0) {
+      row.setAttribute('class', 'row strong-gray')
+      flag = 1
+    } else if (flag === 1) {
+      row.setAttribute('class', 'row light-gray')
+      flag = 0
+    }
+    arrayStats.forEach((element, index) => {
+      if (index === 0) {
+        addStat(row, team[element], 'col-5 separation')
+      } else if (index === 7) {
+        addStat(row, team[element], 'col-1 ')
+      } else {
+        addStat(row, team[element], 'col-1 separation')
+      }
+    })
+    rankings.append(row)
+  })
+
+
+
+  const matches = await getStorage(matchesParameter)
+  console.log('matches:', matches) // for debugging purposes, feel free to remove
+  const rounds = await getStorage(matchesParameter)
+  console.log('matches data', rounds) // for debugging purposes, feel free to remove
+  rounds.forEach(match => { // adding the matches data...
+    let row = document.createElement('div')
+    row.setAttribute('class', 'row')
+    addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
+    addStat(row, ' ', 'separation')
+    addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
+    // addImg(row, match.homeTeamlogo, 'teamlogos')
+    addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
+    addSpan(row, match.scoreFullTime, 'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom')
+    addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
+    // addImg(row, match.awayTeamlogo, 'teamlogos')
+    addSpan(row, match.awayTeamName, 'd-flex align-items-center border-bottom')
+    round.append(row)
+    let row2 = document.createElement('div')
+    row2.setAttribute('class', 'row ')// border-bottom
+    round.append(row2)
+  })
 }
 
 
-async function openRanks(league, matches) {
+
+
+
+// For opening the ranks when you click on a league
+function openRanks(league, matches) {
+  // we remove the previos info and add the new headers first,
   let header = document.getElementById('leaguename')
   header.innerHTML = ''
   let matchesDelete = document.getElementById('matches')
@@ -151,11 +224,14 @@ async function openRanks(league, matches) {
       tableRemoval.removeChild(tableRemoval.lastChild)
     }
   }
+
   addTag()
   init(league, matches)
-  document.documentElement.scrollTop = 0
+  document.documentElement.scrollTop = 0 // this is for  rolling back th scroll to the top if you  click on another button .
 }
 
+
+// a nice feat, when a league is active, its image becomes colored.
 arrayLeague.forEach(element => {
   const button = document.getElementById(element.country)
   button.addEventListener('click', () => {
@@ -178,130 +254,21 @@ const addDate = () => {
     })
 }
 
-
-
 addDate()
 
+matchesButton.style.fontWeight = 'bold'
+rankings.style.display = 'none'
 
-// END OF THE POPUP.JS FILE
-// START OF THE RANKS.JS FILE
-
-let rankings = document.getElementById('table')
-let round = document.getElementById('matches')
-let matchesButton = document.getElementById('watchMatches')
-let rankingsButton = document.getElementById('watchStandings')
-
-
-
-
-
-
-
-const arrayTags = ['Home Team', 'Status', 'Away Team']
-const arrayMatchesStats = ['homeTeamLogo', 'scoreFullTime', 'awayTeamLogo']
-
-
-const addTag = () => {
-  arrayStats.forEach(stat => {
-    let parent = document.getElementById(stat)
-    let tag = document.createElement('h6')
-    tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
-    parent.appendChild(tag)
-  })
-}
-
-const addLeague = (league) => {
-  let header = document.getElementById('league')
-  header.appendChild(document.createTextNode(`League: ${league}`))
-}
-
-const init = async (leagueParameter, matchesParameter) => {
-  // const league = (await browser.storage.local.get(leagueParameter))
-  const league = await getStorage(leagueParameter)
-  console.log('League: ', league)
-  addLeague(leagueParameter)
-  // const table = browser.storage.local.get(leagueParameter)
-  const table = await getStorage(leagueParameter)
-
-  table.forEach(team => {
-    let row = document.createElement('div')
-    row.setAttribute('class', 'row')
-    arrayStats.forEach(element => {
-      addStat(row, team[element], 'col-sm border-right')
-    })
-    rankings.append(row)
-  })
-
-
-  // const matches = (await browser.storage.local.get(matchesParameter))
-  const matches = await getStorage(matchesParameter)
-  console.log('matches:', matches)
-  // const rounds = browser.storage.local.get(matchesParameter)
-  const rounds = await getStorage(matchesParameter)
-  console.log('matches data', rounds)
-  rounds.forEach(match => {
-    let row = document.createElement('div')
-    row.setAttribute('class', 'row')
-    addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
-    addStat(row, ' ', 'separation')
-    addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
-    // addImg(row, match.homeTeamlogo, 'teamlogos')
-    addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
-    addSpan(row, match.scoreFullTime, 'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom')
-    addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
-    // addImg(row, match.awayTeamlogo, 'teamlogos')
-    addSpan(row, match.awayTeamName, 'd-flex align-items-center border-bottom')
-    let breakline = document.createElement('br')
-    round.append(row)
-    let row2 = document.createElement('div')
-    row2.setAttribute('class', 'row ')// border-bottom
-    round.append(row2)
-  })
-}
-// TO INSERT MATCHES
-// let row = document.createElement('div')
-//     row.setAttribute('class', 'row')
-//     addImg(row, match.homeTeamLogo, `${centeredRight} mt-3`)
-//     addStat(row, match.scoreFullTime, `${centered} text-center mt-5 `, 'h1',)
-//     addImg(row, match.awayTeamLogo, `${centeredLeft} mt-3`)
-//     round.append(row)
-//     let row2 = document.createElement('div')
-//     row2.setAttribute('class', 'row')
-//     addStat(row2, match.homeTeamName, centeredRight, 'h4')
-//     addStat(row2, match.status, centered, 'h4')
-//     addStat(row2, match.awayTeamName, centeredLeft, 'h4')
-//     round.append(row2)
-//     let row3 = document.createElement('div')
-//     row3.setAttribute('class', 'row')
-//     addStat(row3, '', 'col-sm border-right')
-//     addStat(row3, match.date.substr(0, 15), centered)
-//     addStat(row3, '', 'col-sm border-left')
-//     round.append(row3)
+// toggles the matches and the standings.
 matchesButton.addEventListener('click', () => {
   rankings.style.display = 'none'
   round.style.display = 'block'
+  matchesButton.style.fontWeight = 'bold'
+  rankingsButton.style.fontWeight = 'normal'
 })
 rankingsButton.addEventListener('click', () => {
   rankings.style.display = 'block'
   round.style.display = 'none'
+  matchesButton.style.fontWeight = 'normal'
+  rankingsButton.style.fontWeight = 'bold'
 })
-
-
-// awayTeamName: element.awayTeam.team_name,
-//           awayTeamLogo: element.awayTeam.logo,
-//           date: element.event_date,
-//           firstStart: element.firstHalfStart,
-//           goalsAway: element.goalsAwayTeam,
-//           goalsHome: element.goalsHomeTeam,
-//           homeTeamName: element.homeTeam.team_name,
-//           homeTeamLogo: element.homeTeam.logo,
-//           scoreHalfTime: element.score.halftime,
-//           scoreFullTime: element.score.fulltime,
-//           scoreExtraTime: element.score.extratime,
-//           scorePenalty: element.score.penalty,
-//           status: element.status,
-//           venue: element.venue,
-
-
-
-console.log('Works!')

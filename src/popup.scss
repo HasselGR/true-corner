@@ -56,7 +56,6 @@ button:hover{
 }
 
 #table{
-  background-color: rgba(128, 194, 88, 1);
   width: 590px;
 }
 
@@ -69,7 +68,7 @@ h5{
 }
 
 h6{
-  font-size: 10px;
+  font-size: medium;
   font-weight: 600;
 }
 
@@ -142,4 +141,17 @@ span{
 .navbar{
   border-bottom:5px solid white;
 }
+.bottom{
+  border-bottom:5px solid white;
+}
+
+.strong-gray{
+  background-color: rgb(230,231,232);
+}
+
+.light-gray {
+  background-color: rgba(241, 242, 242, 1);
+}
 // #dee2e6
+
+//230, 231, 232
