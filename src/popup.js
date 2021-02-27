@@ -1,7 +1,6 @@
 import browser from 'webextension-polyfill'
 import { setStorage, getStorage } from './lib/common'
 
-
 let footer = document.getElementById('footer')
 
 // this is for getting the data stored,and for building interactivity.
@@ -114,7 +113,6 @@ const addStat = (row, name, style, type = 'h6') => {
   row.appendChild(column)
 }
 
-
 const addSpan = (row, name, style) => {
   let span = document.createElement('span')
   span.setAttribute('class', style)
@@ -186,9 +184,6 @@ const init = async (leagueParameter, matchesParameter) => {
 }
 
 
-
-
-
 // For opening the ranks when you click on a league
 function openRanks(league, matches) {
   // we remove the previos info and add the new headers first,
@@ -208,7 +203,7 @@ function openRanks(league, matches) {
   header.appendChild(name)
   let headerRemove = document.getElementById('league')
   headerRemove.innerHTML = ''
-  arrayStats.forEach(stat => {
+  arrayStats.forEach((stat) => {
     let parent = document.getElementById(stat)
     parent.innerHTML = ''
   })
@@ -230,28 +225,24 @@ function openRanks(league, matches) {
   document.documentElement.scrollTop = 0 // this is for  rolling back th scroll to the top if you  click on another button .
 }
 
-
-// a nice feat, when a league is active, its image becomes colored.
-arrayLeague.forEach(element => {
+arrayLeague.forEach((element) => {
   const button = document.getElementById(element.country)
   button.addEventListener('click', () => {
     openRanks(element.league, element.matches)
     let change = document.querySelectorAll('.blackwhite')
-    change.forEach(image => {
+    change.forEach((image) => {
       image.style.filter = 'grayscale(100%)'
     })
     button.style.filter = 'grayscale(0%)'
   })
 })
 
-
 const addDate = () => {
-  browser.storage.local.get('date')
-    .then(data => {
-      let tag = document.createElement('h5')
-      tag.appendChild(document.createTextNode(`Last updated since: ${data.date}`))
-      footer.append(tag)
-    })
+  browser.storage.local.get('date').then((data) => {
+    let tag = document.createElement('h5')
+    tag.appendChild(document.createTextNode(`Last updated since: ${data.date}`))
+    footer.append(tag)
+  })
 }
 
 addDate()
