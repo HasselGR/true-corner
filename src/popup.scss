@@ -4,6 +4,27 @@ body{
   width: 750px;
 }
 
+@font-face {
+  font-family: 'Poppins Light';
+  src: url('./fonts/Poppins-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins Regular';
+  src: url('./fonts/Poppins-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins SemiBold';
+  src: url('./fonts/Poppins-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Poppins Bold';
+  src: url('./fonts/Poppins-Bold.ttf') format('truetype');
+}
+
+
 #leaguename{
   margin-top:2px;
   margin-right: 125px;
@@ -15,7 +36,7 @@ body{
 
 }
 .sidenav {
-  margin-top: 61px;
+  margin-top: 80px;
   height:inherit;
   width: 90px; /* Set the width of the sidebar */
   position: absolute; /* Fixed Sidebar (stay in place on scroll) */
@@ -68,6 +89,7 @@ h5{
 }
 
 h6{
+  font-family: 'Poppins Bold';
   font-size: medium;
   font-weight: 600;
 }
@@ -128,6 +150,7 @@ nav{
 span{
   width: 100px;
   font-size: x-small;
+  font-family: 'Poppins Regular';
 }
 
 .first{
@@ -151,6 +174,10 @@ span{
 
 .light-gray {
   background-color: rgba(241, 242, 242, 1);
+}
+
+.topbar {
+  font-family: 'Poppins Regular';
 }
 // #dee2e6
 
