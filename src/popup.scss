@@ -85,9 +85,11 @@ button:hover {
   margin-left: 50px;
 }
 
-// #matches{
-//   background-color: white;
-// }
+#matches{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 h5 {
   font-size: medium;
@@ -111,6 +113,34 @@ h6 {
   background-color: rgba(241, 242, 242, 1);
 }
 
+.match-row {
+  display: flex;
+  justify-content: center;
+}
+
+.table-stat {
+  display: flex;
+  padding: 10px 0 10px 0;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    // width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+}
+
+.table-team {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h6 {
+    margin: 0;
+  }
+}
+
 @media screen and (max-height: 450px) {
   .sidenav {
     padding-top: 15px;
@@ -125,7 +155,7 @@ h6 {
   .container-sm {
     max-width: 600px;
     margin-left: 25px;
-    padding-right: 75px;
+    padding-right: 25px;
   }
 }
 

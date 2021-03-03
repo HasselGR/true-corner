@@ -147,11 +147,11 @@ const init = async (leagueParameter, matchesParameter) => {
     }
     arrayStats.forEach((element, index) => {
       if (index === 0) {
-        addStat(row, team[element], 'col-5 separation')
+        addStat(row, team[element], 'col-5 separation table-team')
       } else if (index === 7) {
-        addStat(row, team[element], 'col-1 ', 'p')
+        addStat(row, team[element], 'col-1 table-stat', 'p')
       } else {
-        addStat(row, team[element], 'col-1 separation', 'p')
+        addStat(row, team[element], 'col-1 separation table-stat', 'p')
       }
     })
     rankings.append(row)
@@ -165,7 +165,7 @@ const init = async (leagueParameter, matchesParameter) => {
   console.log('matches data', rounds) // for debugging purposes, feel free to remove
   rounds.forEach(match => { // adding the matches data...
     let row = document.createElement('div')
-    row.setAttribute('class', 'row')
+    row.setAttribute('class', 'row match-row')
     addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
     addStat(row, ' ', 'separation')
     addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '35', 'border-bottom team-logo')
