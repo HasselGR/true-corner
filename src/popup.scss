@@ -167,6 +167,7 @@ span {
 }
 
 .first {
+  
   // border-right: 5px solid white !important;
   border-bottom: 1px solid #dee2e6;
 }
@@ -177,6 +178,12 @@ span {
 }
 .navbar {
   border-bottom: 5px solid white;
+}
+
+.team-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .bottom {
   border-bottom: 5px solid white;
@@ -200,3 +207,7 @@ p {
 // #dee2e6
 
 //230, 231, 232
+
+#lastUpdated {
+  font-size: x-small;
+}

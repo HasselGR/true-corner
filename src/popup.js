@@ -119,12 +119,11 @@ const addSpan = (row, name, style) => {
   span.innerHTML = `${name}`
   row.appendChild(span)
 }
-const addImg = (row, name, style, size = '150', styleindiv = '') => {
+const addImg = (row, name, style, size = '35', styleindiv = '') => {
   let column = document.createElement('div')
   column.setAttribute('class', styleindiv)
   let stat = document.createElement('img')
   stat.setAttribute('width', size)
-  stat.setAttribute('height', size)
   stat.setAttribute('src', name)
   stat.setAttribute('class', style)
   column.append(stat)
@@ -169,11 +168,11 @@ const init = async (leagueParameter, matchesParameter) => {
     row.setAttribute('class', 'row')
     addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
     addStat(row, ' ', 'separation')
-    addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
+    addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '35', 'border-bottom team-logo')
     // addImg(row, match.homeTeamlogo, 'teamlogos')
     addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
     addSpan(row, match.scoreFullTime, 'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom')
-    addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '55', 'border-bottom')
+    addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '35', 'border-bottom team-logo')
     // addImg(row, match.awayTeamlogo, 'teamlogos')
     addSpan(row, match.awayTeamName, 'd-flex align-items-center border-bottom')
     round.append(row)
@@ -192,8 +191,7 @@ function openRanks(league, matches) {
   let matchesDelete = document.getElementById('matches')
   matchesDelete.innerHTML = ''
   let leagueimage = document.createElement('img')
-  leagueimage.setAttribute('width', '55')
-  leagueimage.setAttribute('height', '55')
+  leagueimage.setAttribute('width', '35')
   leagueimage.setAttribute('src', `./images/${league}.png`)
   leagueimage.setAttribute('class', '')
   header.appendChild(leagueimage)
@@ -239,7 +237,8 @@ arrayLeague.forEach((element) => {
 
 const addDate = () => {
   browser.storage.local.get('date').then((data) => {
-    let tag = document.createElement('h5')
+    let tag = document.createElement('span')
+    tag.id = 'lastUpdated'
     tag.appendChild(document.createTextNode(`Last update: ${data.date}`))
     footer.append(tag)
   })
