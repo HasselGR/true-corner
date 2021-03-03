@@ -150,9 +150,9 @@ const init = async (leagueParameter, matchesParameter) => {
       if (index === 0) {
         addStat(row, team[element], 'col-5 separation')
       } else if (index === 7) {
-        addStat(row, team[element], 'col-1 ')
+        addStat(row, team[element], 'col-1 ', 'p')
       } else {
-        addStat(row, team[element], 'col-1 separation')
+        addStat(row, team[element], 'col-1 separation', 'p')
       }
     })
     rankings.append(row)

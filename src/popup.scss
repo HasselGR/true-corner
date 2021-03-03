@@ -1,6 +1,6 @@
 body{
   background-color: rgba(241, 242, 242, 1);
-  height:1000px;
+  height:950px;
   width: 750px;
 }
 
@@ -78,6 +78,7 @@ button:hover{
 
 #table{
   width: 590px;
+  margin-left: 50px;
 }
 
 // #matches{
@@ -149,7 +150,7 @@ nav{
 
 span{
   width: 100px;
-  font-size: x-small;
+  font-size: small;
   font-family: 'Poppins Regular';
 }
 
@@ -160,6 +161,7 @@ span{
 
 .separation{
   border-right: 5px solid white;
+  font-weight: lighter;
 }
 .navbar{
   border-bottom:5px solid white;
@@ -178,6 +180,10 @@ span{
 
 .topbar {
   font-family: 'Poppins Regular';
+}
+
+p{
+  font-family: 'Poppins Light';
 }
 // #dee2e6
 
