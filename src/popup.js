@@ -240,13 +240,13 @@ arrayLeague.forEach((element) => {
 const addDate = () => {
   browser.storage.local.get('date').then((data) => {
     let tag = document.createElement('h5')
-    tag.appendChild(document.createTextNode(`Last updated since: ${data.date}`))
+    tag.appendChild(document.createTextNode(`Last update: ${data.date}`))
     footer.append(tag)
   })
 }
 
 addDate()
-
+openRanks('Premier League', 'Premier_League_matches')
 matchesButton.style.fontWeight = 'bold'
 rankings.style.display = 'none'
 

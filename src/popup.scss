@@ -1,7 +1,12 @@
-body{
+$testing-border: 1px solid red;
+$popup-height: 580px;
+$popup-width: 780px;
+
+body {
+  width: $popup-width;
+  height: $popup-height;
   background-color: rgba(241, 242, 242, 1);
-  height:950px;
-  width: 750px;
+  // border: $testing-border;
 }
 
 @font-face {
@@ -24,30 +29,29 @@ body{
   src: url('./fonts/Poppins-Bold.ttf') format('truetype');
 }
 
-
-#leaguename{
-  margin-top:2px;
+#leaguename {
+  margin-top: 2px;
   margin-right: 125px;
+  margin-bottom: 0;
   margin-left: 30px; /* Same as the width of the sidebar */
-  padding: 0px 10px;
+  padding: 0 10px;
   background-color: rgba(241, 242, 242, 1);
-  margin-bottom: 0px;
-  border-bottom:5px solid white;
-
+  border-bottom: 5px solid white;
 }
 .sidenav {
-  margin-top: 80px;
-  height:inherit;
-  width: 90px; /* Set the width of the sidebar */
-  position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  top: 0;
   right: 0;
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 20px;
+  z-index: 1; /* Stay on top */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90px; /* Set the width of the sidebar */
+  height: $popup-height;
+  overflow-y: hidden;
   text-align: center;
   background-color: rgba(241, 242, 242, 1);
-  border-left:5px solid white;
+  border-left: 5px solid white;
 }
 
 .sidenav a {
@@ -63,20 +67,20 @@ body{
 }
 
 button {
-  border: 2px solid #4CAF50;
-  border-radius: 8px;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-  transition-duration: 0.4s;
-  cursor: pointer;
   font-size: small;
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: pointer;
+  transition-duration: 0.4s;
 }
 
-button:hover{
-  background-color: #4CAF50; /* Green */
+button:hover {
+  background-color: #4caf50; /* Green */
   color: white;
 }
 
-#table{
+#table {
   width: 590px;
   margin-left: 50px;
 }
@@ -85,93 +89,101 @@ button:hover{
 //   background-color: white;
 // }
 
-h5{
+h5 {
   font-size: medium;
 }
 
-h6{
+h6 {
   font-family: 'Poppins Bold';
   font-size: medium;
   font-weight: 600;
 }
 
-
-.col-sm{
+.col-sm {
   padding-right: 0;
   padding-left: 0;
   text-align: center;
 }
 #results {
-  left:0;
+  left: 0;
   margin-right: 95px; /* Same as the width of the sidebar */
   padding: 0px 10px;
-  background-color: rgba(241, 242, 242, 1)
+  background-color: rgba(241, 242, 242, 1);
 }
 
 @media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
 }
 
 @media (min-width: 576px) {
-  .container, .container-sm{
+  .container,
+  .container-sm {
     max-width: 600px;
     margin-left: 25px;
     padding-right: 75px;
   }
 }
 
-.blackwhite{
-  width: 50px;
+.blackwhite {
+  width: 35px;
   filter: grayscale(100%);
   transition-duration: 0.4s;
 }
-.blackwhite:hover{
+.blackwhite:hover {
   width: 60px;
   filter: grayscale(0%);
 }
-nav{
-  background-color: rgba(217,217,217,1);
+nav {
+  background-color: rgba(217, 217, 217, 1);
 }
-.navbar .container, .navbar .container-fluid, .navbar .container-lg, .navbar .container-md, .navbar .container-sm, .navbar .container-xl{
+.navbar .container,
+.navbar .container-fluid,
+.navbar .container-lg,
+.navbar .container-md,
+.navbar .container-sm,
+.navbar .container-xl {
   justify-content: start;
-  
 }
 
-.scorebg{
-  background-color: rgb(230,231,232);
+.scorebg {
+  background-color: rgb(230, 231, 232);
 }
-.teamlogos{
-  border-radius:50%;
+.teamlogos {
+  border-radius: 50%;
 }
-.nav-text{
-  margin-right:20px;
+.nav-text {
+  margin-right: 20px;
 }
 
-span{
+span {
   width: 100px;
   font-size: small;
   font-family: 'Poppins Regular';
 }
 
-.first{
+.first {
   // border-right: 5px solid white !important;
-  border-bottom: 1px solid  #dee2e6
+  border-bottom: 1px solid #dee2e6;
 }
 
-.separation{
+.separation {
   border-right: 5px solid white;
   font-weight: lighter;
 }
-.navbar{
-  border-bottom:5px solid white;
+.navbar {
+  border-bottom: 5px solid white;
 }
-.bottom{
-  border-bottom:5px solid white;
+.bottom {
+  border-bottom: 5px solid white;
 }
 
-.strong-gray{
-  background-color: rgb(230,231,232);
+.strong-gray {
+  background-color: rgb(230, 231, 232);
 }
 
 .light-gray {
@@ -182,7 +194,7 @@ span{
   font-family: 'Poppins Regular';
 }
 
-p{
+p {
   font-family: 'Poppins Light';
 }
 // #dee2e6

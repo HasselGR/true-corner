@@ -12,27 +12,33 @@
     "message": "Rankings"
   },
   "team":{
-    "message": "Team"
+    "message": "TEAMS"
   },
   "games": {
-    "message": "Matches"
+    "message": "GP"
   },
   "wins": {
-    "message": "Wins"
+    "message": "W"
   },
   "losses": {
-    "message": "Losses"
+    "message": "L"
   },
   "draws": {
-    "message": "Draws"
+    "message": "D"
   },
   "points":{
-    "message": "Points"
+    "message": "P"
   },
   "goalsDiff": {
-    "message": "GoalsDiff"
+    "message": "GD"
   },
   "titleMatches": {
-    "message": "Matches"
+    "message": "TM"
+  },
+  "goalsFor": {
+    "message": "F"
+  },
+  "goalsAgainst": {
+    "message": "A"
   }
 }
