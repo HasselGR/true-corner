@@ -45,9 +45,10 @@ body {
   z-index: 1; /* Stay on top */
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   width: 90px; /* Set the width of the sidebar */
-  height: $popup-height;
+  height: 100%;
+  padding: 10px 0 10px 0;
   overflow-y: hidden;
   text-align: center;
   background-color: rgba(241, 242, 242, 1);
