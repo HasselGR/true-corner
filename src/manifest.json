@@ -9,10 +9,10 @@
     "https://*/"],
   "homepage_url": "https://viafutbol.com",
   "icons": {
-    "128": "images/icon.png"
+    "128": "images/futbol-logo.png"
   },
   "browser_action": {
-    "default_icon": "images/icon.png"
+    "default_icon": "images/futbol-logo.png"
   },
   "content_scripts": [
     {
