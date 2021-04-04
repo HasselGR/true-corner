@@ -27,7 +27,7 @@ const color = {
 
 const getColorLocal = async () => {
   try {
-    const encryptedColor = await getStorage('code-color')
+    const encryptedColor = await getStorage('code-color-tc')
     return encryptedColor ? cryptr.decrypt(encryptedColor) : null
   } catch (error) {
     console.error(error)
@@ -38,7 +38,7 @@ const getColorLocal = async () => {
 const setColorLocal = async (codeColor) => {
   try {
     const encryptedColor = cryptr.encrypt(codeColor)
-    await setStorage('code-color', encryptedColor)
+    await setStorage('code-color-tc', encryptedColor)
   } catch (error) {
     console.error(error)
     throw error
@@ -165,9 +165,6 @@ const matches = [
   'Liga_MX_matches',
   'Primera_Division_Peruana_matches',
 ]
-
-let ranks = {}
-let current = ''
 
 // This method is for getting the data of the standings for every league, it is used with the arrays above
 const getStandings = async (league, name, matchParam) => {
