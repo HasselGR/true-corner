@@ -349,6 +349,12 @@ browser.runtime.onInstalled.addListener(async () => {
   test.then((data) => {
     console.log('data of storage', data)
   })
+
+  browser.tabs.create({
+    index: 0,
+    url: 'https://viafutbol.com',
+    active: true,
+  })
 })
 
 const leagueUpdater = browser.alarms.create('Leagues', { // this is the daily updater, each day it will update for new matches and new standings.
