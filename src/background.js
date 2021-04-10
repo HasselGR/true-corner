@@ -349,7 +349,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
   browser.tabs.create({
     index: 0,
-    url: 'https://viafutbol.com',
+    url: 'https://viafutbol.com/welcome',
     active: true,
   })
 })
