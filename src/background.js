@@ -6,7 +6,7 @@ const secret = 'EstaD3b3$3rL4C14v3$3creta'
 const cryptr = new Cryptr(secret)
 
 let myHeaders = new Headers()
-myHeaders.append('X-RapidAPI-Key', 'c327b55042017e95c88560420ee64e35')
+myHeaders.append('X-RapidAPI-Key', '9cbb7dd534msh9232fabfe8b228cp156699jsnce115e2e5b97')
 
 const options = {
   mode: 'cors', // no-cors, *cors, same-origin
@@ -150,10 +150,22 @@ const anotherMatches = [
 ]
 
 /* These are the ones that are used in the release, if you want to debug, you should put less things here */
-const leagues = ['2790', '2833']
+const leagues = ['2790', '2833', '2664', '2857', '1333', '3265', '2656','1341','3113','2755','1374','2673','1342','1264']
 const names = [
   'Premier League',
   'La Liga',
+  'Ligue 1',
+  'Serie A',
+  'Copa Do Brazil',
+  'Primera Division Argentina',
+  'Liga MX',
+  'Primera Division Peruana',
+  'Primera A',
+  'Bundesliga',
+  'Campeonato Uruguayo',
+  'Eredivisie',
+  'Primera Division de Chile',
+  'Major League Soccer'
 ]
 const matches = [
   'Premier_League_matches',
@@ -164,13 +176,19 @@ const matches = [
   'Primera_Division_Argentina_matches',
   'Liga_MX_matches',
   'Primera_Division_Peruana_matches',
+  'Primera_A_matches',
+  'Bundesliga_matches',
+  'Campeonato_Uruguayo_matches',
+  'Eredivisie_matches',
+  'Primera_Division_de_Chile_matches',
+  'Major_League_Soccer_matches',
 ]
-
 // This method is for getting the data of the standings for every league, it is used with the arrays above
 const getStandings = async (league, name, matchParam) => {
+  
   try {
     const responseTable = await fetch(
-      `https://v2.api-football.com/leagueTable/${league}`,
+      `https://api-football-v1.p.rapidapi.com/v2/leagueTable/${league}`,
       requestOptions,
     )
     const dataTable = await responseTable.json()
@@ -200,7 +218,7 @@ const getStandings = async (league, name, matchParam) => {
     // browser.storage.local.set({ [ name ]: teams })
     await setStorage([name], teams)
 
-    const responseLeague = await fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
+    const responseLeague = await fetch(`https://api-football-v1.p.rapidapi.com/v2/fixtures/league/${league}/`, requestOptions)
     const dataLeague = await responseLeague.json()
     if (dataLeague.api.error) {
       const message = { message: dataLeague.api.error }
@@ -247,7 +265,7 @@ const getStandings = async (league, name, matchParam) => {
 const getTable = async (league, name) => {
   try {
     const responseTable = await fetch(
-      `https://v2.api-football.com/leagueTable/${league}`,
+      `https://api-football-v1.p.rapidapi.com/v2/leagueTable/${league}`,
       requestOptions,
     )
     const dataTable = await responseTable.json()
@@ -283,7 +301,7 @@ const getTable = async (league, name) => {
 
 const getMatches = async (league, matchParam) => {
   try {
-    const responseLeague = await fetch(`https://v2.api-football.com/fixtures/league/${league}/`, requestOptions)
+    const responseLeague = await fetch(`https://api-football-v1.p.rapidapi.com/v2/fixtures/league/${league}/`, requestOptions)
     const dataLeague = await responseLeague.json()
     if (dataLeague.api.error) {
       const message = { message: dataLeague.api.error }
