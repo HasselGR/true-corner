@@ -1,83 +1,8 @@
 import browser from 'webextension-polyfill'
-import { setStorage, getStorage } from './lib/common'
+import { getStorage } from './lib/common'
+import { arrayLeague } from './lib/constant'
 
 let footer = document.getElementById('footer')
-
-// this is for getting the data stored,and for building interactivity.
-// country is for getting the ids of the buttons in the league
-// league, and matches are for getting the standings and matches, respectively
-const arrayLeague = [
-  {
-    country: 'UK',
-    league: 'Premier League',
-    matches: 'Premier_League_matches',
-  },
-  {
-    country: 'ES',
-    league: 'La Liga',
-    matches: 'La_Liga_matches',
-  },
-  {
-    country: 'FR',
-    league: 'Ligue 1',
-    matches: 'Ligue_1_matches',
-  },
-  {
-    country: 'IT',
-    league: 'Serie A',
-    matches: 'Serie_A_matches',
-  },
-  {
-    country: 'BR',
-    league: 'Copa Do Brazil',
-    matches: 'Copa_Do_Brazil_matches',
-  },
-  {
-    country: 'AR',
-    league: 'Primera Division Argentina',
-    matches: 'Primera_Division_Argentina_matches',
-  },
-  {
-    country: 'MX',
-    league: 'Liga MX',
-    matches: 'Liga_MX_matches',
-  },
-  {
-    country: 'PE',
-    league: 'Primera Division Peruana',
-    matches: 'Primera_Division_Peruana_matches',
-  },
-  {
-    country: 'CO',
-    league: 'Primera A',
-    matches: 'Primera_A_matches',
-  },
-  {
-    country: 'AL',
-    league: 'Bundesliga',
-    matches: 'Bundesliga_matches',
-  },
-  {
-    country: 'UY',
-    league: 'Campeonato Uruguayo',
-    matches: 'Campeonato_Uruguayo_matches',
-  },
-  {
-    country: 'PB',
-    league: 'Eredivisie',
-    matches: 'Eredivisie_matches',
-  },
-  {
-    country: 'CH',
-    league: 'Primera Division de Chile',
-    matches: 'Primera_Division_de_Chile_matches',
-  },
-  {
-    country: 'US',
-    league: 'Major League Soccer',
-    matches: 'Major_League_Soccer_matches',
-  },
-]
 
 let rankings = document.getElementById('table')
 let round = document.getElementById('matches')
@@ -132,8 +57,6 @@ const addImg = (row, name, style, size = '35', styleindiv = '') => {
 
 // This method inits and adds its respective league and matches, depending on the parameter sent..
 const init = async (leagueParameter, matchesParameter) => {
-  const league = await getStorage(leagueParameter)
-  console.log('League: ', league)
   const table = await getStorage(leagueParameter)
   let flag = 0
   table.forEach(team => {
@@ -156,8 +79,6 @@ const init = async (leagueParameter, matchesParameter) => {
     })
     rankings.append(row)
   })
-
-
 
   const matches = await getStorage(matchesParameter)
   console.log('matches:', matches) // for debugging purposes, feel free to remove
@@ -236,7 +157,7 @@ arrayLeague.forEach((element) => {
 })
 
 const addDate = () => {
-  browser.storage.local.get('date').then((data) => {
+  browser.storage.local.get('date_VF').then((data) => {
     let tag = document.createElement('span')
     tag.id = 'lastUpdated'
     tag.appendChild(document.createTextNode(`Last update: ${data.date}`))
