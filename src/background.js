@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 import Cryptr from 'cryptr'
-import { setStorage, getStorage, sendBackgroundCommand } from './lib/common'
+import { setStorage, getStorage, sendCommand } from './lib/common'
 import { leagues, matches, names, secret } from './lib/constant'
 
 const cryptr = new Cryptr(secret)
@@ -73,7 +73,7 @@ const get = async (sender) => {
     }
 
     if (info.code === '#00000') {
-      sendBackgroundCommand('congratulations')
+      sendCommand('congratulations')
     }
     await browser.tabs.executeScript(sender.tab.id, color)
   } catch (error) {

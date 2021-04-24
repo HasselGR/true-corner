@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill'
 
-export const sendBackgroundCommand = async (messager) => {
-  const sending = await browser.runtime.sendMessage({ message: messager })
+export const sendCommand = async (message) => {
+  const sending = await browser.runtime.sendMessage({ message })
   return sending
 }
 
