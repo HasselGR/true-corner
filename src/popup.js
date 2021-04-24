@@ -211,3 +211,15 @@ document.addEventListener('DOMContentLoaded', function (event) {
   addDate()
   openRanks('Premier League', 'Premier_League_matches')
 })
+
+// Message listening
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request.message) {
+    case 'refresh-popup':
+      window.location.reload()
+      break
+    default:
+      console.warn('Unhandled message: ', request, sender)
+      break
+  }
+})
