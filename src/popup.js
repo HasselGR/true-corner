@@ -9,19 +9,27 @@ let round = document.getElementById('matches')
 let matchesButton = document.getElementById('watchMatches')
 let rankingsButton = document.getElementById('watchStandings')
 
-const arrayStats = ['team', 'points', 'games', 'wins', 'draws', 'losses', 'goalsFor', 'goalsAgainst']
+const arrayStats = [
+  'team',
+  'points',
+  'games',
+  'wins',
+  'draws',
+  'losses',
+  'goalsFor',
+  'goalsAgainst',
+]
 
 const centered = 'justify-content d-flex align-items-center flex-column'
 
 const addTag = () => {
-  arrayStats.forEach(stat => {
+  arrayStats.forEach((stat) => {
     let parent = document.getElementById(stat)
     let tag = document.createElement('h6')
     tag.appendChild(document.createTextNode(browser.i18n.getMessage(stat)))
     parent.appendChild(tag)
   })
 }
-
 
 const addLeague = (league) => {
   let header = document.getElementById('league')
@@ -59,7 +67,7 @@ const addImg = (row, name, style, size = '35', styleindiv = '') => {
 const init = async (leagueParameter, matchesParameter) => {
   const table = await getStorage(leagueParameter)
   let flag = 0
-  table.forEach(team => {
+  table.forEach((team) => {
     let row = document.createElement('div')
     if (flag === 0) {
       row.setAttribute('class', 'row strong-gray')
@@ -84,25 +92,41 @@ const init = async (leagueParameter, matchesParameter) => {
   console.log('matches:', matches) // for debugging purposes, feel free to remove
   const rounds = await getStorage(matchesParameter)
   console.log('matches data', rounds) // for debugging purposes, feel free to remove
-  rounds.forEach(match => { // adding the matches data...
+  rounds.forEach((match) => {
+    // adding the matches data...
     let row = document.createElement('div')
     row.setAttribute('class', 'row match-row')
     addSpan(row, match.status, 'first d-flex align-items-center px-2 ml-2')
     addStat(row, ' ', 'separation')
-    addImg(row, match.homeTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '35', 'border-bottom team-logo')
+    addImg(
+      row,
+      match.homeTeamLogo,
+      `teamlogos ${centered} pl-2 pr-2`,
+      '35',
+      'border-bottom team-logo',
+    )
     // addImg(row, match.homeTeamlogo, 'teamlogos')
     addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
-    addSpan(row, match.scoreFullTime, 'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom')
-    addImg(row, match.awayTeamLogo, `teamlogos ${centered} pl-2 pr-2`, '35', 'border-bottom team-logo')
+    addSpan(
+      row,
+      match.scoreFullTime,
+      'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom',
+    )
+    addImg(
+      row,
+      match.awayTeamLogo,
+      `teamlogos ${centered} pl-2 pr-2`,
+      '35',
+      'border-bottom team-logo',
+    )
     // addImg(row, match.awayTeamlogo, 'teamlogos')
     addSpan(row, match.awayTeamName, 'd-flex align-items-center border-bottom')
     round.append(row)
     let row2 = document.createElement('div')
-    row2.setAttribute('class', 'row ')// border-bottom
+    row2.setAttribute('class', 'row ') // border-bottom
     round.append(row2)
   })
 }
-
 
 // For opening the ranks when you click on a league
 function openRanks(league, matches) {
@@ -165,8 +189,6 @@ const addDate = () => {
   })
 }
 
-addDate()
-openRanks('Premier League', 'Premier_League_matches')
 matchesButton.style.fontWeight = 'bold'
 rankings.style.display = 'none'
 
@@ -182,4 +204,10 @@ rankingsButton.addEventListener('click', () => {
   round.style.display = 'none'
   matchesButton.style.fontWeight = 'normal'
   rankingsButton.style.fontWeight = 'bold'
+})
+
+// Page start
+document.addEventListener('DOMContentLoaded', function (event) {
+  addDate()
+  openRanks('Premier League', 'Premier_League_matches')
 })
