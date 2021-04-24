@@ -222,7 +222,6 @@ rankingsButton.addEventListener('click', () => {
 
 // Page start
 document.addEventListener('DOMContentLoaded', function (event) {
-  addDate()
   openRanks('Premier League', 'Premier_League_matches')
 })
 

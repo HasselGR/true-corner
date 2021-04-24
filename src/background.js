@@ -197,11 +197,13 @@ browser.runtime.onInstalled.addListener(async () => {
   })
   await Promise.all(promises)
 
-  browser.tabs.create({
-    index: 0,
-    url: 'https://viafutbol.com/welcome',
-    active: true,
-  })
+  if (process.env.NODE_ENV !== 'development') {
+    browser.tabs.create({
+      index: 0,
+      url: 'https://viafutbol.com/welcome',
+      active: true,
+    })
+  }
 })
 
 browser.alarms.create('Leagues', {
@@ -230,6 +232,7 @@ browser.alarms.onAlarm.addListener(async (alarmInfo) => {
         }
       })
       await Promise.all(promises)
+      sendCommand('refresh-popup')
       break
     case 'Matches':
       leagues.forEach((element, index) => {
@@ -239,12 +242,14 @@ browser.alarms.onAlarm.addListener(async (alarmInfo) => {
         }
       })
       await Promise.all(promises)
+      sendCommand('refresh-popup')
       break
     case 'Standings':
       leagues.forEach((element, index) => {
         promises.push(getStandings(element, names[index], matches[index]))
       })
       await Promise.all(promises)
+      sendCommand('refresh-popup')
       break
     default:
       console.info('Alarm no handled.')
