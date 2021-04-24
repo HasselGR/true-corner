@@ -195,12 +195,13 @@ browser.runtime.onInstalled.addListener(async () => {
   const date = new Date()
   // browser.storage.local.set({ date: date.toString() })
   await setStorage('date_VF', date.toString())
-
-  browser.tabs.create({
-    index: 0,
-    url: 'https://viafutbol.com/welcome',
-    active: true,
-  })
+  if (process.env.NODE_ENV !== 'development') {
+    browser.tabs.create({
+      index: 0,
+      url: 'https://viafutbol.com/welcome',
+      active: true,
+    })
+  }
 })
 
 browser.alarms.create('Leagues', {
