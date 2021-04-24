@@ -11,13 +11,13 @@ let rankingsButton = document.getElementById('watchStandings')
 
 const arrayStats = [
   'team',
-  'points',
   'games',
   'wins',
   'draws',
   'losses',
   'goalsFor',
   'goalsAgainst',
+  'points',
 ]
 
 const centered = 'justify-content d-flex align-items-center flex-column'

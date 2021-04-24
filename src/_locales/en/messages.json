@@ -15,7 +15,7 @@
     "message": "TEAMS"
   },
   "games": {
-    "message": "GP"
+    "message": "P"
   },
   "wins": {
     "message": "W"
@@ -27,7 +27,7 @@
     "message": "D"
   },
   "points":{
-    "message": "P"
+    "message": "PTS"
   },
   "goalsDiff": {
     "message": "GD"
