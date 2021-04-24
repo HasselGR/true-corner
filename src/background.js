@@ -2,6 +2,7 @@ import browser from 'webextension-polyfill'
 import Cryptr from 'cryptr'
 import { setStorage, getStorage, sendBackgroundCommand } from './lib/common'
 import { leagues, matches, names, secret } from './lib/constant'
+import { hasGamesInProgress } from './lib/functions'
 
 const cryptr = new Cryptr(secret)
 
@@ -119,7 +120,8 @@ const getTable = async (league, name) => {
     })
     // console.log('teams before insertion', teams)
     // browser.storage.local.set({ [ name ]: teams })
-    await setStorage(name, teams)
+    const date = new Date()
+    await setStorage(name, { lastUpdated: date.toDateString(), teams })
   } catch (error) {
     console.log(error)
   }
@@ -127,6 +129,9 @@ const getTable = async (league, name) => {
 
 const getMatches = async (league, matchParam) => {
   try {
+    let dateOld = new Date()
+    dateOld.setDate(dateOld.getDate() - 7)
+    console.log(dateOld.toString())
     const responseLeague = await fetch(
       `https://api-football-v1.p.rapidapi.com/v2/fixtures/league/${league}/`,
       requestOptions,
@@ -142,8 +147,6 @@ const getMatches = async (league, matchParam) => {
     let date = new Date()
     if (fixtures) {
       fixtures.forEach((element) => {
-        let dateOld = new Date()
-        dateOld.setDate(dateOld.getDate() - 7)
         let dateEvent = new Date(element.event_date)
         if (dateOld < dateEvent && dateEvent < date) {
           const match = {
@@ -161,14 +164,15 @@ const getMatches = async (league, matchParam) => {
             scorePenalty: element.score.penalty,
             status: element.status,
             venue: element.venue,
+            statusShort: element.statusShort,
           }
           games.push(match) /// and push it to the array
         }
       })
     }
-    console.log('League Fixture: ', games)
+    console.log('League Fixture ', league, matchParam, ': ', games)
     // browser.storage.local.set({ [ match ]: games })
-    await setStorage(matchParam, games)
+    await setStorage(matchParam, { lastUpdated: date.toDateString(), games })
   } catch (error) {
     console.log(error)
   }
@@ -192,9 +196,6 @@ browser.runtime.onInstalled.addListener(async () => {
     promises.push(getStandings(element, names[index], matches[index]))
   })
   await Promise.all(promises)
-  const date = new Date()
-  // browser.storage.local.set({ date: date.toString() })
-  await setStorage('date_VF', date.toString())
 
   browser.tabs.create({
     index: 0,
@@ -205,29 +206,48 @@ browser.runtime.onInstalled.addListener(async () => {
 
 browser.alarms.create('Leagues', {
   // this is the daily updater, each day it will update for new matches and new standings.
-  periodInMinutes: 60,
+  periodInMinutes: 1,
 })
 // 1440
 browser.alarms.create('Matches', {
   periodInMinutes: 60,
 })
 // 60
+browser.alarms.create('Standings', {
+  periodInMinutes: 60 * 24,
+})
 
 browser.alarms.onAlarm.addListener(async (alarmInfo) => {
   const promises = []
+  console.log('Alarm: ', alarmInfo.name)
   switch (alarmInfo.name) {
     case 'Leagues':
       leagues.forEach((element, index) => {
-        promises.push(getTable(element, names[index]))
+        console.log('League: ', element)
+        if (!hasGamesInProgress(matches[index])) {
+          console.log('Fetch to League (Table): ', element)
+          promises.push(getTable(element, names[index]))
+        }
       })
       await Promise.all(promises)
       break
     case 'Matches':
       leagues.forEach((element, index) => {
-        promises.push(getMatches(element, matches[index]))
+        if (!hasGamesInProgress(matches[index])) {
+          console.log('Fetch to League (Matches): ', element)
+          promises.push(getMatches(element, matches[index]))
+        }
       })
       await Promise.all(promises)
       break
+    case 'Standings':
+      leagues.forEach((element, index) => {
+        promises.push(getStandings(element, names[index], matches[index]))
+      })
+      await Promise.all(promises)
+      break
+    default:
+      console.info('Alarm no handled.')
   }
 })
 
