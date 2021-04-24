@@ -109,7 +109,11 @@ const init = async (leagueParameter, matchesParameter) => {
     addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
     addSpan(
       row,
-      match.scoreFullTime,
+      match.scorePenalty ||
+        match.scoreExtraTime ||
+        match.scoreFullTime ||
+        match.scoreHalfTime ||
+        '-',
       'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom',
     )
     addImg(
