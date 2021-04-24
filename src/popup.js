@@ -11,13 +11,13 @@ let rankingsButton = document.getElementById('watchStandings')
 
 const arrayStats = [
   'team',
-  'points',
   'games',
   'wins',
   'draws',
   'losses',
   'goalsFor',
   'goalsAgainst',
+  'points',
 ]
 
 const centered = 'justify-content d-flex align-items-center flex-column'
@@ -118,7 +118,11 @@ const init = async (leagueParameter, matchesParameter) => {
     addSpan(row, match.homeTeamName, 'border-right d-flex align-items-center pr-3 border-bottom')
     addSpan(
       row,
-      match.scoreFullTime,
+      match.scorePenalty ||
+        match.scoreExtraTime ||
+        match.scoreFullTime ||
+        match.scoreHalfTime ||
+        '-',
       'px-3 border-right d-flex align-items-center justify-content-center scorebg border-bottom',
     )
     addImg(
@@ -216,4 +220,20 @@ rankingsButton.addEventListener('click', () => {
   dateTableContainer.style.display = 'contents'
 })
 
-openRanks('Premier League', 'Premier_League_matches')
+// Page start
+document.addEventListener('DOMContentLoaded', function (event) {
+  addDate()
+  openRanks('Premier League', 'Premier_League_matches')
+})
+
+// Message listening
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request.message) {
+    case 'refresh-popup':
+      window.location.reload()
+      break
+    default:
+      console.warn('Unhandled message: ', request, sender)
+      break
+  }
+})

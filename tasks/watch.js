@@ -8,7 +8,9 @@ import chalk from 'chalk'
 export function watch() {
   const server = io.listen(process.env.WEBSOCKET_PORT)
   let socket
-  server.on('connection', (newSocket) => { socket = newSocket })
+  server.on('connection', (newSocket) => {
+    socket = newSocket
+  })
 
   async function triggerFileChange() {
     socket.emit('file changed', () => {
@@ -28,6 +30,15 @@ export function watch() {
   fancyLog()
   fancyLog(`  1. Go to ${chalk.underline.bold(`chrome://extensions/`)}`)
   fancyLog(`  2. Make sure ${chalk.bold(`Developer mode`)} is on`)
-  fancyLog(`  3. Click ${chalk.bold(`Load unpacked`)} and choose the ${chalk.bold(`build/`)} folder`)
+  fancyLog(
+    `  3. Click ${chalk.bold(`Load unpacked`)} and choose the ${chalk.bold(`build/`)} folder`,
+  )
+  fancyLog(
+    `  NOTE: If you get a ${chalk.bold(
+      `TypeError: Cannot read property 'emit' of undefined`,
+    )} you need to make a ${chalk.bold('.env')} file with the variable ${chalk.bold(
+      'WEBSOCKET_PORT=8080',
+    )}`,
+  )
   fancyLog()
 }

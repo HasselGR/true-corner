@@ -1,6 +1,6 @@
-import { sendBackgroundCommand } from './lib/common'
+import { sendCommand } from './lib/common'
 
 // Gets football data
 
 
-sendBackgroundCommand('get-color')
+sendCommand('get-color')
