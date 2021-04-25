@@ -121,7 +121,7 @@ const getTable = async (league, name) => {
     // console.log('teams before insertion', teams)
     // browser.storage.local.set({ [ name ]: teams })
     const date = new Date()
-    await setStorage(name, { lastUpdated: date.toDateString(), teams })
+    await setStorage(name, { lastUpdated: date.toISOString().split('T').join(' ').split('.')[0], teams })
   } catch (error) {
     console.log(error)
   }
@@ -144,7 +144,7 @@ const getMatches = async (league, matchParam) => {
     // console.log('games', data)
     const fixtures = dataLeague.api.fixtures
     let games = []
-    let date = new Date()
+    const date = new Date()
     if (fixtures) {
       fixtures.forEach((element) => {
         let dateEvent = new Date(element.event_date)
@@ -172,7 +172,7 @@ const getMatches = async (league, matchParam) => {
     }
     console.log('League Fixture ', league, matchParam, ': ', games)
     // browser.storage.local.set({ [ match ]: games })
-    await setStorage(matchParam, { lastUpdated: date.toDateString(), games })
+    await setStorage(matchParam, { lastUpdated: date.toISOString().split('T').join(' ').split('.')[0], games })
   } catch (error) {
     console.log(error)
   }
@@ -221,28 +221,34 @@ browser.alarms.create('Standings', {
 
 browser.alarms.onAlarm.addListener(async (alarmInfo) => {
   const promises = []
+  let sendMessage = false
+  const popupOpened = browser.extension
+    .getViews({ type: 'popup' })
+    .filter((currentPopup) => currentPopup.document.title === 'Via Futbol').length
   console.log('Alarm: ', alarmInfo.name)
   switch (alarmInfo.name) {
     case 'Leagues':
       leagues.forEach((element, index) => {
         console.log('League: ', element)
         if (!hasGamesInProgress(matches[index])) {
+          sendMessage = true
           console.log('Fetch to League (Table): ', element)
           promises.push(getTable(element, names[index]))
         }
       })
       await Promise.all(promises)
-      sendCommand('refresh-popup')
+      if (popupOpened) sendCommand('refresh-popup')
       break
     case 'Matches':
       leagues.forEach((element, index) => {
         if (!hasGamesInProgress(matches[index])) {
+          sendMessage = true
           console.log('Fetch to League (Matches): ', element)
           promises.push(getMatches(element, matches[index]))
         }
       })
       await Promise.all(promises)
-      sendCommand('refresh-popup')
+      if (sendMessage) sendCommand('refresh-popup')
       break
     case 'Standings':
       leagues.forEach((element, index) => {

@@ -1,8 +1,12 @@
 import browser from 'webextension-polyfill'
 
 export const sendCommand = async (message) => {
-  const sending = await browser.runtime.sendMessage({ message })
-  return sending
+  try {
+    const sending = await browser.runtime.sendMessage({ message })
+    return sending
+  } catch (error) {
+    console.info(error.message || error)
+  }
 }
 
 export const setStorage = async (field, data) => {
