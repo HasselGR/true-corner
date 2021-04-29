@@ -237,7 +237,7 @@ browser.alarms.onAlarm.addListener(async (alarmInfo) => {
         }
       })
       await Promise.all(promises)
-      if (popupOpened) sendCommand('refresh-popup')
+      if (popupOpened && sendMessage) sendCommand('refresh-popup')
       break
     case 'Matches':
       leagues.forEach((element, index) => {
@@ -248,14 +248,14 @@ browser.alarms.onAlarm.addListener(async (alarmInfo) => {
         }
       })
       await Promise.all(promises)
-      if (sendMessage) sendCommand('refresh-popup')
+      if (popupOpened && sendMessage) sendCommand('refresh-popup')
       break
     case 'Standings':
       leagues.forEach((element, index) => {
         promises.push(getStandings(element, names[index], matches[index]))
       })
       await Promise.all(promises)
-      sendCommand('refresh-popup')
+      if (popupOpened) sendCommand('refresh-popup')
       break
     default:
       console.info('Alarm no handled.')
