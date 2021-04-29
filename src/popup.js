@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill'
 import { getStorage } from './lib/common'
-import { arrayLeague } from './lib/constant'
+import { arrayLeague, matches } from './lib/constant'
 
 let footer = document.getElementById('footer')
 
@@ -19,7 +19,7 @@ const arrayStats = [
   'goalsAgainst',
   'points',
 ]
-
+hideIcons(arrayLeague);
 const centered = 'justify-content d-flex align-items-center flex-column'
 
 const addTag = () => {
@@ -60,13 +60,13 @@ const addImg = (row, name, style, size = '35', styleindiv = '') => {
 
 const addDate = (id, date, display = 'contents') => {
   if (document.getElementById(id)) {
-    document.getElementById(id).textContent = `Last update: ${date}`
+    document.getElementById(id).textContent = `Ultima actualizacion: ${date}`
     document.getElementById(id).style.display = display
   } else {
     let tag = document.createElement('span')
     tag.id = id
     tag.style.display = display
-    tag.appendChild(document.createTextNode(`Last update: ${date}`))
+    tag.appendChild(document.createTextNode(`Ultima actualizacion: ${date}`))
     footer.append(tag)
   }
 }
@@ -236,3 +236,24 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
   }
 })
+
+
+//hide icons if there's no games 
+async function hideIcons (arrayLeague){
+  let countries;
+  let match = [...matches];
+  let data;
+
+  for (let i = 0 ; i < arrayLeague.length ; i++) {    
+    countries = arrayLeague[i].country;  //it only works if the data is in the same position respectively
+    data = await getStorage(match[i]); 
+
+    if (data.games.length === 0) {
+      console.log('data sin partidos', match[i], countries)
+      let img = document.querySelector("[id="+countries+"]");
+      img.style.display= 'none';
+      console.log('esto es img',img)        
+    }    
+  }  
+
+}
