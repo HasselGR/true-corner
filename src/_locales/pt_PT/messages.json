@@ -40,5 +40,20 @@
   },
   "goalsAgainst": {
     "message": "GC"
+  },
+  "FT": {
+    "message": "Juego Terminado"
+  },
+  "SUSP": {
+    "message": "Juego Suspendido"
+  },
+  "PST": {
+    "message": "Juego Pospuesto"
+  },
+  "CANC": {
+    "message": "Juego Cancelado"
+  },
+  "ABD": {
+    "message": "Juego Abandonado"
   }
 }

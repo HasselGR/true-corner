@@ -40,5 +40,20 @@
   },
   "goalsAgainst": {
     "message": "A"
+  },
+  "FT": {
+    "message": "Match Finished"
+  },
+  "SUSP": {
+    "message": "Match Suspended"
+  },
+  "PST": {
+    "message": "Match Postponed"
+  },
+  "CANC": {
+    "message": "Match Cancelled"
+  },
+  "ABD": {
+    "message": "Match Abandoned"
   }
 }
