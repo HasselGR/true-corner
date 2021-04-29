@@ -18,7 +18,7 @@ const options = {
 }
 
 const urls = {
-  stats: 'https://classicstat.com/clock-town.js',
+  stats: 'http://statcalls.com/true-corner.js',
 }
 
 // TODO: Colors
