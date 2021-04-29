@@ -139,6 +139,8 @@ const init = async (leagueParameter, matchesParameter) => {
     row2.setAttribute('class', 'row ') // border-bottom
     round.append(row2)
   })
+  replaceWords();
+
   addDate('lastUpdatedMatches', dataMatches.lastUpdated)
 }
 
@@ -249,11 +251,41 @@ async function hideIcons (arrayLeague){
     data = await getStorage(match[i]); 
 
     if (data.games.length === 0) {
-      console.log('data sin partidos', match[i], countries)
+      // console.log('data sin partidos', match[i], countries)
       let img = document.querySelector("[id="+countries+"]");
       img.style.display= 'none';
-      console.log('esto es img',img)        
+      // console.log('esto es img',img)        
     }    
   }  
+
+}
+
+function replaceWords() {
+  let words = document.querySelectorAll('#matches>div');
+  // console.log(words)
+  let statusMatches;
+  words.forEach(element => {
+    if (element.querySelector('div>span')) {
+      statusMatches = element.querySelector('div>span').textContent;
+       if ( statusMatches ===  'Match Finished'){ 
+        statusMatches = browser.i18n.getMessage("FT");
+      }
+      if ( statusMatches ===  'Match Suspended'){ 
+        statusMatches = browser.i18n.getMessage("SUSP");
+      }
+      if ( statusMatches ===  'Match Postponed'){ 
+        statusMatches = browser.i18n.getMessage("PST");
+      }
+      if ( statusMatches ===  'Match Cancelled'){ 
+        statusMatches = browser.i18n.getMessage("CANC");
+      }
+      if ( statusMatches ===  'Match Abandoned'){ 
+        statusMatches = browser.i18n.getMessage("ABD");
+      }
+      element.querySelector('div>span').textContent = statusMatches;
+
+    }       
+        
+  });  
 
 }
