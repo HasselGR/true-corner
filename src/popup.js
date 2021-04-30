@@ -99,7 +99,7 @@ const init = async (leagueParameter, matchesParameter) => {
   addDate('lastUpdatedTable', dataTable.lastUpdated, 'none')
 
   const dataMatches = await getStorage(matchesParameter)
-  const rounds = dataMatches.games
+  const rounds = dataMatches?.games
   console.log('matches data', rounds) // for debugging purposes, feel free to remove
   rounds.forEach((match) => {
     // adding the matches data...
@@ -250,7 +250,7 @@ async function hideIcons (arrayLeague){
     countries = arrayLeague[i].country;  //it only works if the data is in the same position respectively
     data = await getStorage(match[i]); 
 
-    if (data.games.length === 0) {
+    if (data?.games.length === 0) {
       // console.log('data sin partidos', match[i], countries)
       let img = document.querySelector("[id="+countries+"]");
       img.style.display= 'none';
