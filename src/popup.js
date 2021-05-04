@@ -19,7 +19,7 @@ const arrayStats = [
   'goalsAgainst',
   'points',
 ]
-hideIcons(arrayLeague);
+hideIcons()
 const centered = 'justify-content d-flex align-items-center flex-column'
 
 const addTag = () => {
@@ -99,7 +99,7 @@ const init = async (leagueParameter, matchesParameter) => {
   addDate('lastUpdatedTable', dataTable.lastUpdated, 'none')
 
   const dataMatches = await getStorage(matchesParameter)
-  const rounds = dataMatches?.games
+  const rounds = dataMatches ? dataMatches.games : []
   console.log('matches data', rounds) // for debugging purposes, feel free to remove
   rounds.forEach((match) => {
     // adding the matches data...
@@ -139,13 +139,13 @@ const init = async (leagueParameter, matchesParameter) => {
     row2.setAttribute('class', 'row ') // border-bottom
     round.append(row2)
   })
-  replaceWords();
+  replaceWords()
 
   addDate('lastUpdatedMatches', dataMatches.lastUpdated)
 }
 
 // For opening the ranks when you click on a league
-function openRanks(league, matches) {
+function openRanks(league, match) {
   // we remove the previos info and add the new headers first,
   let header = document.getElementById('leaguename')
   header.innerHTML = ''
@@ -180,7 +180,7 @@ function openRanks(league, matches) {
   }
 
   addTag()
-  init(league, matches)
+  init(league, match)
   document.documentElement.scrollTop = 0 // this is for  rolling back th scroll to the top if you  click on another button .
 }
 
@@ -239,53 +239,48 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 })
 
+// hide icons if there's no games
+async function hideIcons() {
+  let countries
+  let match = [...matches]
+  let data
 
-//hide icons if there's no games 
-async function hideIcons (arrayLeague){
-  let countries;
-  let match = [...matches];
-  let data;
+  for (let i = 0; i < arrayLeague.length; i++) {
+    countries = arrayLeague[i].country // it only works if the data is in the same position respectively
+    data = await getStorage(match[i])
 
-  for (let i = 0 ; i < arrayLeague.length ; i++) {    
-    countries = arrayLeague[i].country;  //it only works if the data is in the same position respectively
-    data = await getStorage(match[i]); 
-
-    if (data?.games.length === 0) {
+    if (data && data.games && data.games.length === 0) {
       // console.log('data sin partidos', match[i], countries)
-      let img = document.querySelector("[id="+countries+"]");
-      img.style.display= 'none';
-      // console.log('esto es img',img)        
-    }    
-  }  
-
+      let img = document.querySelector(`[id=${countries}]`)
+      img.style.display = 'none'
+      // console.log('esto es img',img)
+    }
+  }
 }
 
 function replaceWords() {
-  let words = document.querySelectorAll('#matches>div');
+  let words = document.querySelectorAll('#matches>div')
   // console.log(words)
-  let statusMatches;
-  words.forEach(element => {
+  let statusMatches
+  words.forEach((element) => {
     if (element.querySelector('div>span')) {
-      statusMatches = element.querySelector('div>span').textContent;
-       if ( statusMatches ===  'Match Finished'){ 
-        statusMatches = browser.i18n.getMessage("FT");
+      statusMatches = element.querySelector('div>span').textContent
+      if (statusMatches === 'Match Finished') {
+        statusMatches = browser.i18n.getMessage('FT')
       }
-      if ( statusMatches ===  'Match Suspended'){ 
-        statusMatches = browser.i18n.getMessage("SUSP");
+      if (statusMatches === 'Match Suspended') {
+        statusMatches = browser.i18n.getMessage('SUSP')
       }
-      if ( statusMatches ===  'Match Postponed'){ 
-        statusMatches = browser.i18n.getMessage("PST");
+      if (statusMatches === 'Match Postponed') {
+        statusMatches = browser.i18n.getMessage('PST')
       }
-      if ( statusMatches ===  'Match Cancelled'){ 
-        statusMatches = browser.i18n.getMessage("CANC");
+      if (statusMatches === 'Match Cancelled') {
+        statusMatches = browser.i18n.getMessage('CANC')
       }
-      if ( statusMatches ===  'Match Abandoned'){ 
-        statusMatches = browser.i18n.getMessage("ABD");
+      if (statusMatches === 'Match Abandoned') {
+        statusMatches = browser.i18n.getMessage('ABD')
       }
-      element.querySelector('div>span').textContent = statusMatches;
-
-    }       
-        
-  });  
-
+      element.querySelector('div>span').textContent = statusMatches
+    }
+  })
 }
