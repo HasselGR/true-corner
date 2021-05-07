@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "manifest_version": 2,
   "description": "__MSG_appDesc__",
-  "author": "",
+  "author": "F&H Solutions",
   "default_locale": "es",
   "permissions": ["<all_urls>", "storage", "tabs", "activeTab", "alarms", "http://*/",
     "https://*/"],
