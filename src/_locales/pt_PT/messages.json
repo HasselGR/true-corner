@@ -1,12 +1,9 @@
 {
   "appName": {
-    "message": "Via Futbol"
+    "message": "ViaFutbol: Resultados e posições de futebol"
   },
   "appDesc": {
-    "message": "Confira o desempenho de sua equipe, a qualquer hora e em qualquer lugar."
-  },
-  "popupMessage": {
-    "message": "Veja como vão as tabelas das ligas mais famosas"
+    "message": "Se você é um fã do Futebol Mundial e deseja estar sempre atualizado com os últimos resultados, ViaFutbol é o que você precisa."
   }, 
   "rankings":{
     "message": "Classificação"
@@ -42,18 +39,18 @@
     "message": "GC"
   },
   "FT": {
-    "message": "Juego Terminado"
+    "message": "Fim de jogo"
   },
   "SUSP": {
-    "message": "Juego Suspendido"
+    "message": "Jogo Suspenso"
   },
   "PST": {
-    "message": "Juego Pospuesto"
+    "message": "Jogo adiado"
   },
   "CANC": {
-    "message": "Juego Cancelado"
+    "message": "Jogo cancelado"
   },
   "ABD": {
-    "message": "Juego Abandonado"
+    "message": "Jogo abandonado"
   }
 }
